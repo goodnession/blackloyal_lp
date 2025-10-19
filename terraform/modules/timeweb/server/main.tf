@@ -1,15 +1,6 @@
-# Get server info via API
-data "external" "server_info" {
-  program = ["bash", "-c", <<-EOT
-    curl -s -H "Authorization: Bearer ${var.twc_token}" \
-      https://api.timeweb.cloud/api/v1/servers/${var.server_id} | \
-    jq -r '{id: (.server.id | tostring), ip: .server.main_ipv4, name: .server.name, status: .server.status}'
-  EOT
-  ]
-
-  query = {
-    server_id = var.server_id
-  }
+# Get server info from Timeweb Cloud
+data "twc_server" "main" {
+  server_id = var.server_id
 }
 
 # Create SSH key in Timeweb Cloud
@@ -25,7 +16,8 @@ resource "null_resource" "add_ssh_key_to_server" {
   provisioner "local-exec" {
     command = <<-EOT
       # Add SSH key to server's authorized_keys via API
-      ssh-keyscan -H ${data.external.server_info.result.ip} >> ~/.ssh/known_hosts 2>/dev/null || true
+      mkdir -p ~/.ssh
+      ssh-keyscan -H ${data.twc_server.main.main_ipv4} >> ~/.ssh/known_hosts 2>/dev/null || true
     EOT
   }
 
@@ -42,7 +34,7 @@ resource "null_resource" "wait_for_ssh" {
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      host        = data.external.server_info.result.ip
+      host        = data.twc_server.main.main_ipv4
       user        = "root"
       private_key = var.ssh_private_key
       timeout     = "5m"
@@ -61,7 +53,7 @@ resource "null_resource" "server_setup" {
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      host        = data.external.server_info.result.ip
+      host        = data.twc_server.main.main_ipv4
       user        = "root"
       private_key = var.ssh_private_key
       timeout     = "10m"

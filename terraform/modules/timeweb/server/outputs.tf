@@ -1,21 +1,21 @@
 output "server_id" {
   description = "ID of the server"
-  value       = data.external.server_info.result.id
+  value       = data.twc_server.main.id
 }
 
 output "server_ip" {
   description = "IP address of the server"
-  value       = data.external.server_info.result.ip
+  value       = data.twc_server.main.main_ipv4
 }
 
 output "server_name" {
   description = "Name of the server"
-  value       = data.external.server_info.result.name
+  value       = data.twc_server.main.name
 }
 
 output "server_status" {
   description = "Status of the server"
-  value       = data.external.server_info.result.status
+  value       = data.twc_server.main.status
 }
 
 output "ssh_key_id" {
