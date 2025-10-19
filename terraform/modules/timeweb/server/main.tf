@@ -1,8 +1,3 @@
-# Get server info from Timeweb Cloud
-data "twc_server" "main" {
-  server_id = var.server_id
-}
-
 # Create SSH key in Timeweb Cloud
 resource "twc_ssh_key" "main" {
   name = var.ssh_key_name
@@ -17,7 +12,7 @@ resource "null_resource" "add_ssh_key_to_server" {
     command = <<-EOT
       # Add SSH key to server's authorized_keys via API
       mkdir -p ~/.ssh
-      ssh-keyscan -H ${data.twc_server.main.main_ipv4} >> ~/.ssh/known_hosts 2>/dev/null || true
+      ssh-keyscan -H ${var.server_ip} >> ~/.ssh/known_hosts 2>/dev/null || true
     EOT
   }
 
@@ -34,7 +29,7 @@ resource "null_resource" "wait_for_ssh" {
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      host        = data.twc_server.main.main_ipv4
+      host        = var.server_ip
       user        = "root"
       private_key = var.ssh_private_key
       timeout     = "5m"
@@ -53,7 +48,7 @@ resource "null_resource" "server_setup" {
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      host        = data.twc_server.main.main_ipv4
+      host        = var.server_ip
       user        = "root"
       private_key = var.ssh_private_key
       timeout     = "10m"

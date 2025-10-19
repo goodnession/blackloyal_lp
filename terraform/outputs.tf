@@ -29,7 +29,3 @@ output "domain" {
 #   value       = module.security.firewall_id
 # }
 
-output "server_status" {
-  description = "Status of the server"
-  value       = module.server.server_status
-}

@@ -9,6 +9,7 @@ domain = "your-domain.com"
 
 # Existing server configuration
 server_id = "your_existing_server_id"
+server_ip = "123.456.789.0"
 
 # SSH configuration
 ssh_key_name = "blackloyal-key"

@@ -198,6 +198,7 @@ Settings → Secrets and variables → Actions → New repository secret
 |-----|----------|--------------|
 | `TWC_TOKEN` | API токен Timeweb Cloud | timeweb.cloud/my/api-keys |
 | `SERVER_ID` | ID сервера в Timeweb | timeweb.cloud/my/servers (ID в колонке или URL) |
+| `SERVER_IP` | IP адрес сервера | timeweb.cloud/my/servers (IP в колонке) |
 | `SSH_PUBLIC_KEY` | SSH публичный ключ | `cat ~/.ssh/id_rsa.pub` |
 | `SSH_PRIVATE_KEY` | SSH приватный ключ | `cat ~/.ssh/id_rsa` (полностью с заголовками) |
 | `TELEGRAM_BOT_TOKEN` | Токен Telegram бота | @BotFather в Telegram |
@@ -209,11 +210,14 @@ Settings → Secrets and variables → Actions → New repository secret
 | `TRAEFIK_AUTH` | Basic auth для Traefik | `htpasswd -nb admin password` ($ → $$) |
 | `NUXT_PUBLIC_TELEGRAM_BOT_USERNAME` | Username бота (опционально) | Без @ |
 
-### Получение SERVER_ID через API
+### Получение SERVER_ID и SERVER_IP через API
 
    ```bash
+   # Получить список серверов с ID и IP
    curl -H "Authorization: Bearer YOUR_TWC_TOKEN" \
         https://api.timeweb.cloud/api/v1/servers
+   
+   # В ответе найдите: server.id (SERVER_ID) и server.main_ipv4 (SERVER_IP)
 ```
 
 ---
@@ -247,6 +251,7 @@ Settings → Secrets and variables → Actions → New repository secret
 twc_token = "your_api_token"
 domain = "your-domain.ru"
 server_id = "your_server_id"
+server_ip = "123.456.789.0"
 ssh_key_name = "blackloyal-key"
 ssh_public_key = "ssh-rsa AAAAB3..."
 ssh_private_key = "-----BEGIN OPENSSH PRIVATE KEY-----\n...\n-----END OPENSSH PRIVATE KEY-----"

@@ -3,6 +3,11 @@ variable "server_id" {
   type        = string
 }
 
+variable "server_ip" {
+  description = "IP address of existing server"
+  type        = string
+}
+
 variable "ssh_key_name" {
   description = "SSH key name for server access"
   type        = string
