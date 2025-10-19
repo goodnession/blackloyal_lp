@@ -208,7 +208,6 @@ Settings → Secrets and variables → Actions → New repository secret
 | `ACME_EMAIL` | Email для Let's Encrypt | `admin@your-domain.ru` |
 | `TRAEFIK_AUTH` | Basic auth для Traefik | `htpasswd -nb admin password` ($ → $$) |
 | `NUXT_PUBLIC_TELEGRAM_BOT_USERNAME` | Username бота (опционально) | Без @ |
-| `GHCR_TOKEN` | Personal Access Token для GHCR (опционально) | https://github.com/settings/tokens (права: `write:packages`) |
 
 ### Получение SERVER_ID и SERVER_IP через API
 
@@ -234,26 +233,27 @@ Docker образы хранятся в **GitHub Container Registry (GHCR)**: `g
 
 **Настройка прав (обязательно для первого деплоя):**
 
-1. Откройте: https://github.com/goodnession/blackloyal_lp/settings/actions
+1. Откройте настройки репозитория:
+   ```
+   https://github.com/goodnession/blackloyal_lp/settings/actions
+   ```
 
-2. Прокрутите до **"Workflow permissions"** и выберите:
-   - ✅ **"Read and write permissions"**
-   - ✅ **"Allow GitHub Actions to create and approve pull requests"**
+2. Прокрутите до раздела **"Workflow permissions"**
 
-3. Нажмите **Save**
+3. Выберите **"Read and write permissions"** и нажмите **Save**
 
-**Альтернатива** (если не помогло):
+Это даст GitHub Actions права на:
+- Чтение кода (для checkout)
+- Запись в GitHub Container Registry (для push образов)
 
-Создайте Personal Access Token:
-- https://github.com/settings/tokens/new
-- Права: `write:packages`, `read:packages`
-- Добавьте в Secrets как `GHCR_TOKEN`
+> 💡 **Примечание**: Создавать отдельный Personal Access Token НЕ ТРЕБУЕТСЯ! GitHub Actions использует встроенный `GITHUB_TOKEN` с permissions, настроенными в workflow.
 
 **Изменение видимости образа:**
 
-После первого деплоя можете проверить/изменить видимость:
-- https://github.com/goodnession?tab=packages
-- Найдите `blackloyal_lp` → **Package settings** → **Change visibility**
+После первого деплоя можете проверить/изменить видимость образа:
+1. Откройте: https://github.com/goodnession?tab=packages
+2. Найдите `blackloyal_lp`
+3. **Package settings** → **Change visibility** → выберите **Private** или **Public**
 
 ### Предварительные требования
 
@@ -591,21 +591,31 @@ cat .env.production | grep TELEGRAM
 **Причина:** GitHub Actions не имеет прав на создание packages в GHCR
 
 **Решение:**
-1. Settings → Actions → General → Workflow permissions → **Read and write permissions** → Save
-2. Или создайте Personal Access Token с правами `write:packages` и добавьте как `GHCR_TOKEN` в Secrets
-3. Повторите деплой
+1. Откройте: Settings → Actions → General → Workflow permissions
+2. Выберите **"Read and write permissions"**
+3. Нажмите **Save**
+4. Повторите деплой (push в main или запустите workflow вручную)
 
 ### Docker: authentication required при pull образа
 
 **Причина:** Образ приватный, требуется авторизация
 
 **Решение:**
+
+GitHub Actions автоматически авторизуется при деплое. Если вы пуллите образ вручную на сервере:
+
 ```bash
-# На сервере залогиньтесь в GHCR
+# Создайте Personal Access Token (classic) с правом read:packages
+# https://github.com/settings/tokens/new
+
+# Залогиньтесь на сервере
 echo "YOUR_GITHUB_TOKEN" | docker login ghcr.io -u YOUR_USERNAME --password-stdin
 
-# Или используйте автоматический деплой через GitHub Actions
+# Теперь можете пуллить приватные образы
+docker pull ghcr.io/goodnession/blackloyal_lp:latest
 ```
+
+> 💡 **Примечание**: При использовании автоматического деплоя через GitHub Actions авторизация происходит автоматически.
 
 ### DNS: Домен не резолвится
 
