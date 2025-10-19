@@ -18,7 +18,7 @@ resource "twc_server_ssh_key" "main" {
 # Wait for server to be accessible via SSH
 resource "null_resource" "wait_for_ssh" {
   depends_on = [twc_server_ssh_key.main]
-  
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -27,7 +27,7 @@ resource "null_resource" "wait_for_ssh" {
       private_key = var.ssh_private_key
       timeout     = "5m"
     }
-    
+
     inline = [
       "echo 'Server is ready'"
     ]
@@ -37,7 +37,7 @@ resource "null_resource" "wait_for_ssh" {
 # Run initial server setup
 resource "null_resource" "server_setup" {
   depends_on = [null_resource.wait_for_ssh]
-  
+
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
@@ -46,10 +46,10 @@ resource "null_resource" "server_setup" {
       private_key = var.ssh_private_key
       timeout     = "10m"
     }
-    
+
     script = "${path.module}/user_data.sh"
   }
-  
+
   triggers = {
     server_id = data.twc_server.main.id
   }

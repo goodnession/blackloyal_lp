@@ -1,6 +1,6 @@
 resource "twc_firewall" "main" {
   name = var.firewall_name
-  
+
   rules {
     direction = "inbound"
     protocol  = "tcp"
@@ -8,7 +8,7 @@ resource "twc_firewall" "main" {
     source    = "0.0.0.0/0"
     action    = "allow"
   }
-  
+
   rules {
     direction = "inbound"
     protocol  = "tcp"
@@ -16,7 +16,7 @@ resource "twc_firewall" "main" {
     source    = "0.0.0.0/0"
     action    = "allow"
   }
-  
+
   rules {
     direction = "inbound"
     protocol  = "tcp"
@@ -24,7 +24,7 @@ resource "twc_firewall" "main" {
     source    = "0.0.0.0/0"
     action    = "allow"
   }
-  
+
   rules {
     direction = "outbound"
     protocol  = "tcp"
@@ -32,7 +32,7 @@ resource "twc_firewall" "main" {
     source    = "0.0.0.0/0"
     action    = "allow"
   }
-  
+
   rules {
     direction = "outbound"
     protocol  = "udp"
@@ -40,6 +40,6 @@ resource "twc_firewall" "main" {
     source    = "0.0.0.0/0"
     action    = "allow"
   }
-  
+
   servers = [var.server_id]
 }
