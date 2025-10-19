@@ -86,7 +86,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata
         id: meta
@@ -179,6 +179,10 @@ jobs:
             PORT=3000
             HOSTNAME=0.0.0.0
             ENVEOF
+            
+            # Login to GitHub Container Registry (for private images)
+            echo "Logging in to GitHub Container Registry..."
+            echo "${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}" | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
             
             # Pull latest Docker image
             echo "Pulling Docker image..."

@@ -208,6 +208,7 @@ Settings → Secrets and variables → Actions → New repository secret
 | `ACME_EMAIL` | Email для Let's Encrypt | `admin@your-domain.ru` |
 | `TRAEFIK_AUTH` | Basic auth для Traefik | `htpasswd -nb admin password` ($ → $$) |
 | `NUXT_PUBLIC_TELEGRAM_BOT_USERNAME` | Username бота (опционально) | Без @ |
+| `GHCR_TOKEN` | Personal Access Token для GHCR (опционально) | https://github.com/settings/tokens (права: `write:packages`) |
 
 ### Получение SERVER_ID и SERVER_IP через API
 
@@ -223,13 +224,45 @@ Settings → Secrets and variables → Actions → New repository secret
 
 ## Деплой
 
+### Настройка прав доступа к GitHub Container Registry
+
+Docker образы хранятся в **GitHub Container Registry (GHCR)**: `ghcr.io/goodnession/blackloyal_lp`
+
+**Приватность:**
+- Если репозиторий **приватный** → образ автоматически **приватный** ✅
+- Если репозиторий **публичный** → образ **публичный** (можно изменить вручную)
+
+**Настройка прав (обязательно для первого деплоя):**
+
+1. Откройте: https://github.com/goodnession/blackloyal_lp/settings/actions
+
+2. Прокрутите до **"Workflow permissions"** и выберите:
+   - ✅ **"Read and write permissions"**
+   - ✅ **"Allow GitHub Actions to create and approve pull requests"**
+
+3. Нажмите **Save**
+
+**Альтернатива** (если не помогло):
+
+Создайте Personal Access Token:
+- https://github.com/settings/tokens/new
+- Права: `write:packages`, `read:packages`
+- Добавьте в Secrets как `GHCR_TOKEN`
+
+**Изменение видимости образа:**
+
+После первого деплоя можете проверить/изменить видимость:
+- https://github.com/goodnession?tab=packages
+- Найдите `blackloyal_lp` → **Package settings** → **Change visibility**
+
 ### Предварительные требования
 
 1. Домен зарегистрирован в Timeweb Cloud
 2. VPS сервер создан в Timeweb (Ubuntu 22.04, минимум 2GB RAM)
 3. **SSH публичный ключ добавлен на сервер** (в `/root/.ssh/authorized_keys`)
-4. GitHub Secrets настроены
-5. DNS настроен вручную (A-запись на IP сервера)
+4. **Права доступа к GHCR настроены** (см. выше)
+5. GitHub Secrets настроены
+6. DNS настроен вручную (A-запись на IP сервера)
 
 ### Деплой через GitHub Actions (рекомендуется)
 
@@ -341,8 +374,7 @@ GitHub Actions автоматически:
 6. Загрузит Docker образ и запустит контейнеры
 7. Проверит работоспособность через health check
 
-> 💡 **Важно**: Для первого запуска workflow нужно дать GitHub Actions права на запись в GitHub Container Registry:
-> - Settings → Actions → General → Workflow permissions → Read and write permissions → Save
+> 💡 **Важно**: Убедитесь, что права доступа к GHCR настроены (см. раздел "Настройка прав доступа к GitHub Container Registry" выше)
 
 ### Проверка
 
@@ -553,6 +585,27 @@ cat .env.production | grep TELEGRAM
    - `SSH_PRIVATE_KEY` (не `SERVER_SSH_KEY`)
    - `TWC_TOKEN`
    - `SERVER_ID`
+
+### Docker: denied: installation not allowed to Create organization package
+
+**Причина:** GitHub Actions не имеет прав на создание packages в GHCR
+
+**Решение:**
+1. Settings → Actions → General → Workflow permissions → **Read and write permissions** → Save
+2. Или создайте Personal Access Token с правами `write:packages` и добавьте как `GHCR_TOKEN` в Secrets
+3. Повторите деплой
+
+### Docker: authentication required при pull образа
+
+**Причина:** Образ приватный, требуется авторизация
+
+**Решение:**
+```bash
+# На сервере залогиньтесь в GHCR
+echo "YOUR_GITHUB_TOKEN" | docker login ghcr.io -u YOUR_USERNAME --password-stdin
+
+# Или используйте автоматический деплой через GitHub Actions
+```
 
 ### DNS: Домен не резолвится
 
@@ -772,6 +825,13 @@ ping your-domain.ru
 - Локальные секреты: `.env.development` (в .gitignore)
 - Сервер: `.env.production` (не коммитится в Git)
 - Terraform: `terraform.tfvars` (в .gitignore)
+
+### Docker образы
+
+- Хранятся в GitHub Container Registry (GHCR): `ghcr.io/goodnession/blackloyal_lp`
+- Приватность наследуется от репозитория (приватный репозиторий → приватный образ)
+- Доступ контролируется через GitHub permissions
+- Не содержат чувствительных данных (используются переменные окружения)
 
 ---
 
