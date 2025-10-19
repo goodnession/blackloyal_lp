@@ -193,7 +193,7 @@
     </main>
 
     <ClientOnly>
-      <YandexMetrica />
+      <AnalyticsYandexMetrica />
     </ClientOnly>
 
     <footer class="bg-gray-900 text-white">

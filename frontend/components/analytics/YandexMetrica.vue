@@ -52,6 +52,7 @@ const metricaId = '104705018'
 onMounted(() => {
   if (import.meta.client) {
     const savedConsent = localStorage.getItem('cookie-consent')
+
     if (savedConsent === 'accepted') {
       consentGiven.value = true
       initMetrica()
@@ -85,7 +86,7 @@ const initMetrica = () => {
     })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym')
     /* eslint-enable */
 
-    // Initialize counter
+    // Initialize counter immediately (ym function queues calls)
     window.ym(metricaId, 'init', {
       ssr: true,
       webvisor: true,
