@@ -1,12 +1,5 @@
 <template>
   <div>
-    <!-- Yandex Metrica -->
-    <script
-      v-if="consentGiven"
-      type="text/javascript"
-      :innerHTML="metricaScript"
-    />
-
     <!-- Cookie Consent Banner -->
     <div
       v-if="!consentGiven && !consentDismissed"
@@ -51,9 +44,9 @@
 </template>
 
 <script setup>
-const config = useRuntimeConfig()
 const consentGiven = ref(false)
 const consentDismissed = ref(false)
+const metricaId = '104705018'
 
 // Check for existing consent
 onMounted(() => {
@@ -61,6 +54,7 @@ onMounted(() => {
     const savedConsent = localStorage.getItem('cookie-consent')
     if (savedConsent === 'accepted') {
       consentGiven.value = true
+      initMetrica()
     }
     else if (savedConsent === 'declined') {
       consentDismissed.value = true
@@ -68,23 +62,40 @@ onMounted(() => {
   }
 })
 
-// Yandex Metrica script
-const metricaScript = computed(() => {
-  if (!config.public.analyticsId) return ''
+// Initialize Yandex Metrica
+const initMetrica = () => {
+  if (import.meta.client && !window.ym) {
+    /* eslint-disable */
+    // Load Yandex Metrica script (official code from Yandex)
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () {
+        (m[i].a = m[i].a || []).push(arguments)
+      }
+      m[i].l = 1 * new Date()
+      for (var j = 0; j < document.scripts.length; j++) {
+        if (document.scripts[j].src === r) {
+          return
+        }
+      }
+      k = e.createElement(t)
+      a = e.getElementsByTagName(t)[0]
+      k.async = 1
+      k.src = r
+      a.parentNode.insertBefore(k, a)
+    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym')
+    /* eslint-enable */
 
-  return `
-    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-    ym(${config.public.analyticsId}, "init", {
-         clickmap:true,
-         trackLinks:true,
-         accurateTrackBounce:true,
-         webvisor:true
-    });
-  `
-})
+    // Initialize counter
+    window.ym(metricaId, 'init', {
+      ssr: true,
+      webvisor: true,
+      clickmap: true,
+      ecommerce: 'dataLayer',
+      accurateTrackBounce: true,
+      trackLinks: true,
+    })
+  }
+}
 
 const acceptCookies = () => {
   if (import.meta.client) {
@@ -92,10 +103,15 @@ const acceptCookies = () => {
     consentGiven.value = true
     consentDismissed.value = true
 
+    // Initialize Metrica after consent
+    initMetrica()
+
     // Track consent acceptance
-    if (window.ym && config.public.analyticsId) {
-      window.ym(config.public.analyticsId, 'reachGoal', 'COOKIE_CONSENT_ACCEPTED')
-    }
+    setTimeout(() => {
+      if (window.ym) {
+        window.ym(metricaId, 'reachGoal', 'COOKIE_CONSENT_ACCEPTED')
+      }
+    }, 1000)
   }
 }
 
@@ -108,8 +124,17 @@ const declineCookies = () => {
 
 // Track page views
 watch(() => useRoute().path, () => {
-  if (import.meta.client && consentGiven.value && window.ym && config.public.analyticsId) {
-    window.ym(config.public.analyticsId, 'hit', window.location.href)
+  if (import.meta.client && consentGiven.value && window.ym) {
+    window.ym(metricaId, 'hit', window.location.href)
   }
+})
+
+// Add noscript fallback using useHead
+useHead({
+  noscript: [
+    {
+      children: `<div><img src="https://mc.yandex.ru/watch/${metricaId}" style="position:absolute; left:-9999px;" alt="" /></div>`,
+    },
+  ],
 })
 </script>
