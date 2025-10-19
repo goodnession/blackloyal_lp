@@ -32,8 +32,8 @@ export default defineNuxtConfig({
   // Runtime config для переменных окружения
   runtimeConfig: {
     // Приватные ключи (только на сервере)
-    telegramBotToken: process.env.TELEGRAM_BOT_TOKEN,
-    telegramChatId: process.env.TELEGRAM_CHAT_ID,
+    telegramBotToken: process.env.NUXT_TELEGRAM_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN,
+    telegramChatId: process.env.NUXT_TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID,
 
     // Публичные ключи (доступны на клиенте)
     public: {

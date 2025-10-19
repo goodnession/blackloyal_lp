@@ -147,8 +147,8 @@ jobs:
             cat > .env.production << 'ENVEOF'
             NUXT_PUBLIC_SITE_URL=${{ secrets.NUXT_PUBLIC_SITE_URL }}
             DOMAIN=${{ secrets.DOMAIN }}
-            TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
-            TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+            NUXT_TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+            NUXT_TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
             NUXT_PUBLIC_ANALYTICS_ID=${{ secrets.NUXT_PUBLIC_ANALYTICS_ID }}
             ACME_EMAIL=${{ secrets.ACME_EMAIL }}
             TRAEFIK_AUTH=${{ secrets.TRAEFIK_AUTH }}
@@ -229,8 +229,6 @@ jobs:
                   timeout: 3s
                   retries: 3
                   start_period: 40s
-                environment:
-                  - DOMAIN=\${DOMAIN}
             
             networks:
               web:
