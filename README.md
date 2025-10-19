@@ -284,9 +284,11 @@ exit
 Terraform создаст:
 - Установит Docker, Docker Compose, fail2ban
 - Создаст директорию `/opt/blackloyal`
-- Настроит SSH ключи
+- Настроит временный placeholder сайт (с надписью "Infrastructure Ready!")
 
-> ⚠️ **Примечание**: Terraform НЕ управляет DNS и Firewall из-за ограничений провайдера Timeweb Cloud.
+> ⚠️ **Примечание**: 
+> - Terraform НЕ управляет DNS и Firewall из-за ограничений провайдера Timeweb Cloud
+> - После Terraform сервер покажет placeholder - это нормально! Настоящее приложение нужно задеплоить отдельно (см. шаг 5)
 
 **4. Добавьте deploy key на GitHub (один раз):**
 
@@ -315,14 +317,20 @@ Host github.com
 EOF
 ```
 
-**5. Деплой приложения (автоматический):**
+**5. Деплой приложения:**
 
-   ```bash
-# Сделайте изменения в коде
+Теперь нужно задеплоить настоящее Nuxt приложение:
+
+**Вариант А - Автоматический (рекомендуется):**
+```bash
+# Зафиксируйте все изменения и запушьте в main
 git add .
 git commit -m "Initial deployment"
 git push origin main
 ```
+
+**Вариант Б - Ручной запуск:**
+- Actions → Application CI/CD → Run workflow → Run workflow
 
 GitHub Actions автоматически:
 1. Соберет и протестирует приложение
@@ -333,8 +341,8 @@ GitHub Actions автоматически:
 6. Загрузит Docker образ и запустит контейнеры
 7. Проверит работоспособность через health check
 
-Или запустите вручную:
-- Actions → Application CI/CD → Run workflow
+> 💡 **Важно**: Для первого запуска workflow нужно дать GitHub Actions права на запись в GitHub Container Registry:
+> - Settings → Actions → General → Workflow permissions → Read and write permissions → Save
 
 ### Проверка
 
