@@ -37,7 +37,7 @@ docker network create traefik
 mkdir -p /var/log/traefik
 mkdir -p /var/log/blackloyal
 
-# Set up log rotation
+# Set up log rotation (will be updated during deployment)
 cat > /etc/logrotate.d/blackloyal << 'LOGROTATE_EOF'
 /var/log/blackloyal/*.log {
     daily
@@ -48,12 +48,13 @@ cat > /etc/logrotate.d/blackloyal << 'LOGROTATE_EOF'
     notifempty
     create 644 root root
     postrotate
-        docker-compose -f /opt/blackloyal/docker-compose.prod.yml restart app
+        # Will be updated during deployment
+        echo "Log rotation completed"
     endscript
 }
 LOGROTATE_EOF
 
-# Create systemd service for auto-start
+# Create systemd service for auto-start (will be updated during deployment)
 cat > /etc/systemd/system/blackloyal.service << 'SERVICE_EOF'
 [Unit]
 Description=BlackLoyal Application
@@ -63,61 +64,42 @@ After=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/opt/blackloyal
-ExecStart=/usr/local/bin/docker-compose -f docker-compose.prod.yml up -d
-ExecStop=/usr/local/bin/docker-compose -f docker-compose.prod.yml down
+WorkingDirectory=/opt/blackloyal/frontend
+ExecStart=/bin/true
+ExecStop=/bin/true
 TimeoutStartSec=0
 
 [Install]
 WantedBy=multi-user.target
 SERVICE_EOF
 
-# Enable service
+# Enable service (will be reconfigured during deployment)
 systemctl enable blackloyal.service
 
-# Create basic application structure
-cat > /opt/blackloyal/docker-compose.prod.yml << 'DOCKER_COMPOSE_EOF'
+# Create application directory structure (no containers yet)
+mkdir -p /opt/blackloyal/frontend
+cd /opt/blackloyal/frontend
+
+# Create basic .env.production template
+cat > .env.production << 'ENV_EOF'
+# Environment variables will be set during deployment
+NODE_ENV=production
+PORT=3000
+HOSTNAME=0.0.0.0
+ENV_EOF
+
+# Create placeholder docker-compose.yml for reference
+cat > docker-compose.yml << 'DOCKER_COMPOSE_EOF'
+# This file will be replaced during deployment
+# Placeholder to prevent errors
 version: '3.8'
 services:
-  app:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    restart: unless-stopped
+  placeholder:
+    image: hello-world
+    restart: "no"
 DOCKER_COMPOSE_EOF
-
-# Create basic nginx config
-cat > /opt/blackloyal/nginx.conf << 'NGINX_EOF'
-events {
-    worker_connections 1024;
-}
-
-http {
-    server {
-        listen 80;
-        server_name _;
-        
-        location / {
-            return 200 'BlackLoyal Landing Page - Infrastructure Ready!';
-            add_header Content-Type text/plain;
-        }
-        
-        location /api/health {
-            return 200 '{"status":"ok","message":"Infrastructure ready"}';
-            add_header Content-Type application/json;
-        }
-    }
-}
-NGINX_EOF
-
-# Start basic application
-cd /opt/blackloyal
-docker-compose -f docker-compose.prod.yml up -d
 
 echo "Server setup completed successfully!"
 echo "Domain: ${domain}"
-echo "Application deployed and running!"
-echo "Health check: curl http://localhost/api/health"
+echo "Infrastructure ready for application deployment!"
+echo "Run deployment script to start the application."
