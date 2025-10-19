@@ -168,7 +168,7 @@ jobs:
             
             # Create docker-compose.yml
             echo "Creating docker-compose configuration..."
-            cat > docker-compose.yml << 'COMPOSEEOF'
+            cat > docker-compose.yml << EOF
             version: '3.8'
             
             services:
@@ -184,7 +184,7 @@ jobs:
                   - "--entrypoints.websecure.address=:443"
                   - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
                   - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-                  - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+                  - "--certificatesresolvers.letsencrypt.acme.email=\${ACME_EMAIL}"
                   - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
                   - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
                   - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
@@ -198,12 +198,12 @@ jobs:
                   - web
                 labels:
                   - "traefik.enable=true"
-                  - "traefik.http.routers.dashboard.rule=Host(\`traefik.${DOMAIN}\`)"
+                  - "traefik.http.routers.dashboard.rule=Host(\`traefik.\${DOMAIN}\`)"
                   - "traefik.http.routers.dashboard.service=api@internal"
                   - "traefik.http.routers.dashboard.entrypoints=websecure"
                   - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
                   - "traefik.http.routers.dashboard.middlewares=auth"
-                  - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
+                  - "traefik.http.middlewares.auth.basicauth.users=\${TRAEFIK_AUTH}"
             
               app:
                 image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
@@ -215,7 +215,7 @@ jobs:
                   - web
                 labels:
                   - "traefik.enable=true"
-                  - "traefik.http.routers.app.rule=Host(\`${DOMAIN}\`)"
+                  - "traefik.http.routers.app.rule=Host(\`\${DOMAIN}\`)"
                   - "traefik.http.routers.app.entrypoints=websecure"
                   - "traefik.http.routers.app.tls.certresolver=letsencrypt"
                   - "traefik.http.services.app.loadbalancer.server.port=3000"
@@ -232,7 +232,7 @@ jobs:
             
             volumes:
               traefik-certs:
-            COMPOSEEOF
+            EOF
             
             # Stop existing containers
             echo "Stopping existing containers..."
