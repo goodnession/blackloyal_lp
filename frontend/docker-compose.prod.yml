@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # Reverse proxy with automatic SSL
+  reverse-proxy:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-certs:/data
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+    environment:
+      - TRAEFIK_LOG_LEVEL=INFO
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik.tls=true
+      - traefik.http.routers.traefik.tls.certresolver=letsencrypt
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.middlewares=auth
+      - traefik.http.middlewares.auth.basicauth=${TRAEFIK_AUTH}
+
+  # Main application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blackloyal-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NUXT_PUBLIC_SITE_URL=https://${DOMAIN}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - NUXT_PUBLIC_ANALYTICS_ID=${NUXT_PUBLIC_ANALYTICS_ID}
+      - NUXT_PUBLIC_TELEGRAM_BOT_USERNAME=${NUXT_PUBLIC_TELEGRAM_BOT_USERNAME}
+    env_file:
+      - .env.production
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.app.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.app.tls=true
+      - traefik.http.routers.app.tls.certresolver=letsencrypt
+      - traefik.http.routers.app.service=app
+      - traefik.http.services.app.loadbalancer.server.port=3000
+      - traefik.http.routers.app.middlewares=security-headers
+      - traefik.http.middlewares.security-headers.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.security-headers.headers.customrequestheaders.X-Forwarded-Port=443
+      - traefik.http.middlewares.security-headers.headers.customresponseheaders.X-Frame-Options=DENY
+      - traefik.http.middlewares.security-headers.headers.customresponseheaders.X-Content-Type-Options=nosniff
+      - traefik.http.middlewares.security-headers.headers.customresponseheaders.Referrer-Policy=strict-origin-when-cross-origin
+      - traefik.http.middlewares.security-headers.headers.customresponseheaders.Permissions-Policy=camera=(), microphone=(), geolocation=()
+      - traefik.http.middlewares.security-headers.headers.customresponseheaders.Content-Security-Policy=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://mc.yandex.ru; frame-src 'none';
+    depends_on:
+      - reverse-proxy
+    networks:
+      - traefik
+
+volumes:
+  traefik-certs:
+
+networks:
+  traefik:
+    external: true

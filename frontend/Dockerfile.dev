@@ -1,0 +1,25 @@
+FROM node:20-alpine
+
+# Install dependencies
+RUN apk add --no-cache libc6-compat curl
+
+# Set working directory
+WORKDIR /app
+
+# Install Yarn Berry
+RUN corepack enable && corepack prepare yarn@stable --activate
+
+# Copy package files
+COPY package.json yarn.lock* ./
+
+# Install dependencies
+RUN yarn install --immutable
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start development server
+CMD ["yarn", "dev"]

@@ -1,0 +1,257 @@
+name: Monitoring & Maintenance
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Maintenance action to perform'
+        required: true
+        default: 'health-check'
+        type: choice
+        options:
+          - health-check
+          - cleanup
+          - backup
+          - security-update
+
+env:
+  TF_VERSION: '1.6.0'
+
+jobs:
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'health-check' || github.event_name == 'schedule'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Get Infrastructure Info
+        run: |
+          cd terraform
+          terraform init
+          SERVER_IP=$(terraform output -raw server_ip)
+          DOMAIN=$(terraform output -raw domain)
+          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
+          echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
+        env:
+          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
+          SERVER_ID: ${{ secrets.SERVER_ID }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Check Application Health
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            
+            echo "=== Health Check Report ===" > /tmp/health_report.txt
+            echo "Timestamp: $(date)" >> /tmp/health_report.txt
+            echo "" >> /tmp/health_report.txt
+            
+            # Check Docker containers
+            echo "=== Docker Containers ===" >> /tmp/health_report.txt
+            docker-compose -f /opt/blackloyal/docker-compose.prod.yml ps >> /tmp/health_report.txt
+            echo "" >> /tmp/health_report.txt
+            
+            # Check disk usage
+            echo "=== Disk Usage ===" >> /tmp/health_report.txt
+            df -h >> /tmp/health_report.txt
+            echo "" >> /tmp/health_report.txt
+            
+            # Check memory usage
+            echo "=== Memory Usage ===" >> /tmp/health_report.txt
+            free -h >> /tmp/health_report.txt
+            echo "" >> /tmp/health_report.txt
+            
+            # Check application logs for errors
+            echo "=== Recent Errors ===" >> /tmp/health_report.txt
+            docker-compose -f /opt/blackloyal/docker-compose.prod.yml logs --tail=50 app 2>&1 | grep -i error || echo "No recent errors found" >> /tmp/health_report.txt
+            echo "" >> /tmp/health_report.txt
+            
+            # Check SSL certificate expiry
+            echo "=== SSL Certificate Status ===" >> /tmp/health_report.txt
+            echo | openssl s_client -servername ${{ env.DOMAIN }} -connect ${{ env.DOMAIN }}:443 2>/dev/null | openssl x509 -noout -dates || echo "SSL check failed" >> /tmp/health_report.txt
+            
+            cat /tmp/health_report.txt
+
+      - name: Test Application Endpoints
+        run: |
+          echo "Testing application endpoints..."
+          
+          # Test health endpoint
+          if curl -f "https://${{ env.DOMAIN }}/api/health"; then
+            echo "✅ Health endpoint is working"
+          else
+            echo "❌ Health endpoint failed"
+            exit 1
+          fi
+          
+          # Test main page
+          if curl -f "https://${{ env.DOMAIN }}/"; then
+            echo "✅ Main page is accessible"
+          else
+            echo "❌ Main page failed"
+            exit 1
+          fi
+
+
+  cleanup:
+    name: System Cleanup
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'cleanup'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Get Server IP
+        run: |
+          cd terraform
+          terraform init
+          SERVER_IP=$(terraform output -raw server_ip)
+          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
+        env:
+          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
+          SERVER_ID: ${{ secrets.SERVER_ID }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Perform Cleanup
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            
+            echo "Starting system cleanup..."
+            
+            # Clean Docker
+            echo "Cleaning Docker images and containers..."
+            docker system prune -f
+            docker image prune -f
+            
+            # Clean logs older than 7 days
+            echo "Cleaning old logs..."
+            find /var/log -name "*.log" -mtime +7 -delete 2>/dev/null || true
+            
+            # Clean temporary files
+            echo "Cleaning temporary files..."
+            find /tmp -type f -mtime +1 -delete 2>/dev/null || true
+            
+            # Clean package cache
+            echo "Cleaning package cache..."
+            apt-get clean
+            apt-get autoclean
+            
+            echo "Cleanup completed successfully!"
+
+  backup:
+    name: Create Backup
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'backup'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Get Server IP
+        run: |
+          cd terraform
+          terraform init
+          SERVER_IP=$(terraform output -raw server_ip)
+          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
+        env:
+          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
+          SERVER_ID: ${{ secrets.SERVER_ID }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create Backup
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            
+            echo "Creating backup..."
+            
+            # Run backup script
+            /opt/blackloyal/backup.sh
+            
+            echo "Backup completed successfully!"
+
+  security-update:
+    name: Security Updates
+    runs-on: ubuntu-latest
+    if: github.event.inputs.action == 'security-update'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Get Server IP
+        run: |
+          cd terraform
+          terraform init
+          SERVER_IP=$(terraform output -raw server_ip)
+          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
+        env:
+          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
+          SERVER_ID: ${{ secrets.SERVER_ID }}
+          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Apply Security Updates
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            
+            echo "Applying security updates..."
+            
+            # Update package lists
+            apt-get update
+            
+            # Install security updates only
+            apt-get upgrade -y --only-upgrade
+            
+            # Restart services if needed
+            systemctl restart fail2ban
+            
+            echo "Security updates completed successfully!"

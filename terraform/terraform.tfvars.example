@@ -1,0 +1,19 @@
+# Terraform Variables Example
+# Copy this file to terraform.tfvars and fill in your values
+
+# Timeweb Cloud API token
+twc_token = "your_timeweb_cloud_api_token"
+
+# Domain name for the application
+domain = "your-domain.com"
+
+# Existing server configuration
+server_id = "your_existing_server_id"
+
+# SSH configuration
+ssh_key_name = "blackloyal-key"
+ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC... your-public-key"
+ssh_private_key = "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn\n...\n-----END OPENSSH PRIVATE KEY-----"
+
+# Project name
+project_name = "blackloyal"
