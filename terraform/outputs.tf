@@ -13,20 +13,21 @@ output "ssh_command" {
   value       = "ssh root@${module.server.server_ip}"
 }
 
-output "domain_name" {
-  description = "Domain name"
-  value       = module.dns.domain_name
-}
-
 output "domain" {
-  description = "Domain name (alias)"
+  description = "Domain name"
   value       = var.domain
 }
 
-output "firewall_id" {
-  description = "ID of the firewall"
-  value       = module.security.firewall_id
-}
+# Disabled outputs - modules are commented out in main.tf
+# output "domain_name" {
+#   description = "Domain name from DNS module"
+#   value       = module.dns.domain_name
+# }
+#
+# output "firewall_id" {
+#   description = "ID of the firewall"
+#   value       = module.security.firewall_id
+# }
 
 output "server_status" {
   description = "Status of the server"

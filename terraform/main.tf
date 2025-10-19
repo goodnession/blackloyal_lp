@@ -13,22 +13,28 @@ module "server" {
   twc_token       = var.twc_token
 }
 
-# DNS module
-module "dns" {
-  source = "./modules/timeweb/dns"
+# DNS module - DISABLED
+# NOTE: Timeweb Cloud Terraform provider не поддерживает управление DNS
+# Настройте DNS записи вручную через панель управления Timeweb Cloud
+#
+# module "dns" {
+#   source = "./modules/timeweb/dns"
+#
+#   domain_name = var.domain
+#   server_ip   = module.server.server_ip
+#
+#   depends_on = [module.server]
+# }
 
-  domain_name = var.domain
-  server_ip   = module.server.server_ip
-
-  depends_on = [module.server]
-}
-
-# Security module
-module "security" {
-  source = "./modules/timeweb/security"
-
-  firewall_name = "${var.project_name}-firewall"
-  server_id     = module.server.server_id
-
-  depends_on = [module.server]
-}
+# Security/Firewall module - DISABLED
+# NOTE: Timeweb Cloud Terraform provider не поддерживает используемый синтаксис firewall
+# Настройте firewall вручную через панель управления Timeweb Cloud
+#
+# module "security" {
+#   source = "./modules/timeweb/security"
+#
+#   firewall_name = "${var.project_name}-firewall"
+#   server_id     = module.server.server_id
+#
+#   depends_on = [module.server]
+# }

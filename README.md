@@ -35,10 +35,12 @@
 
 Проект использует разделение ответственности:
 
-- **Terraform** - управление инфраструктурой (DNS, firewall, настройка сервера)
+- **Terraform** - управление инфраструктурой (настройка сервера; DNS и firewall настраиваются вручную)
 - **GitHub Actions** - CI/CD (тесты, сборка Docker образов, деплой)
 - **Docker** - изоляция окружения приложения
 - **Traefik** - reverse proxy с автоматическим SSL
+
+> ⚠️ **Важно**: DNS и Firewall настраиваются вручную через панель управления Timeweb Cloud.
 
 ### Структура
 
@@ -224,6 +226,7 @@ Settings → Secrets and variables → Actions → New repository secret
 2. VPS сервер создан в Timeweb (Ubuntu 22.04, минимум 2GB RAM)
 3. GitHub Secrets настроены
 4. SSH ключи созданы
+5. DNS настроен вручную (A-запись на IP сервера)
 
 ### Деплой через GitHub Actions (рекомендуется)
 
@@ -252,18 +255,23 @@ project_name = "blackloyal"
 
 ### Запуск инфраструктуры
 
-**1. Запустите Terraform (создание инфраструктуры):**
+**1. Настройте DNS вручную:**
+- В панели Timeweb Cloud создайте A-запись домена на IP сервера
+- (опционально) Создайте CNAME запись для www
+
+**2. Запустите Terraform (создание инфраструктуры):**
 - Actions → Infrastructure Management → Run workflow
 - Выберите action: `apply`
 - Дождитесь завершения (5-10 мин)
 
 Terraform создаст:
-- DNS записи для домена
-- Firewall правила
 - Установит Docker, Docker Compose, fail2ban
 - Создаст директорию `/opt/blackloyal`
+- Настроит SSH ключи
 
-**2. Добавьте deploy key на GitHub (один раз):**
+> ⚠️ **Примечание**: Terraform НЕ управляет DNS и Firewall из-за ограничений провайдера Timeweb Cloud.
+
+**3. Добавьте deploy key на GitHub (один раз):**
 
 ```bash
 # Подключитесь к серверу
@@ -290,7 +298,7 @@ Host github.com
 EOF
 ```
 
-**3. Деплой приложения (автоматический):**
+**4. Деплой приложения (автоматический):**
 
    ```bash
 # Сделайте изменения в коде
@@ -388,18 +396,14 @@ ssh root@your-server-ip
 cat ~/.ssh/authorized_keys
 ```
 
-### Terraform: Domain not found
+### Terraform: Validation errors (DNS/Firewall)
 
-**Причина:** Домен не зарегистрирован в Timeweb Cloud
+**Причина:** Timeweb Cloud Terraform провайдер не поддерживает ресурсы DNS и Firewall
 
 **Решение:**
-```bash
-# Проверьте домены через API
-curl -H "Authorization: Bearer YOUR_TWC_TOKEN" \
-     https://api.timeweb.cloud/api/v1/domains
-
-# Зарегистрируйте домен в панели Timeweb
-```
+- DNS настраивается вручную через панель Timeweb Cloud
+- Firewall настраивается вручную через панель Timeweb Cloud
+- Модули DNS и Security отключены в `terraform/main.tf`
 
 ### Docker: Cannot connect to daemon
 
@@ -714,11 +718,8 @@ ping your-domain.ru
 
 ### Firewall
 
-Настраивается автоматически через Terraform:
-- Порт 22 (SSH): открыт
-- Порт 80 (HTTP): открыт (редирект на HTTPS)
-- Порт 443 (HTTPS): открыт
-- Остальные порты: закрыты
+⚠️ Настраивается вручную через панель Timeweb Cloud:
+- Откройте порты 22 (SSH), 80 (HTTP), 443 (HTTPS)
 
 ### SSL
 
