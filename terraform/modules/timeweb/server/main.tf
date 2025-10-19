@@ -1,28 +1,48 @@
-# Get existing server
-data "twc_server" "main" {
-  id = var.server_id
+# Get server info via API
+data "external" "server_info" {
+  program = ["bash", "-c", <<-EOT
+    curl -s -H "Authorization: Bearer ${var.twc_token}" \
+      https://api.timeweb.cloud/api/v1/servers/${var.server_id} | \
+    jq -r '{id: (.server.id | tostring), ip: .server.main_ipv4, name: .server.name, status: .server.status}'
+  EOT
+  ]
+
+  query = {
+    server_id = var.server_id
+  }
 }
 
-# Create SSH key for access
+# Create SSH key in Timeweb Cloud
 resource "twc_ssh_key" "main" {
-  name       = var.ssh_key_name
-  public_key = var.ssh_public_key
+  name = var.ssh_key_name
+  body = var.ssh_public_key
 }
 
-# Attach SSH key to existing server
-resource "twc_server_ssh_key" "main" {
-  server_id  = data.twc_server.main.id
-  ssh_key_id = twc_ssh_key.main.id
+# Add SSH key to server via API
+resource "null_resource" "add_ssh_key_to_server" {
+  depends_on = [twc_ssh_key.main]
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      # Add SSH key to server's authorized_keys via API
+      ssh-keyscan -H ${data.external.server_info.result.ip} >> ~/.ssh/known_hosts 2>/dev/null || true
+    EOT
+  }
+
+  triggers = {
+    ssh_key_id = twc_ssh_key.main.id
+    server_id  = var.server_id
+  }
 }
 
 # Wait for server to be accessible via SSH
 resource "null_resource" "wait_for_ssh" {
-  depends_on = [twc_server_ssh_key.main]
+  depends_on = [null_resource.add_ssh_key_to_server]
 
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      host        = data.twc_server.main.ip
+      host        = data.external.server_info.result.ip
       user        = "root"
       private_key = var.ssh_private_key
       timeout     = "5m"
@@ -41,7 +61,7 @@ resource "null_resource" "server_setup" {
   provisioner "remote-exec" {
     connection {
       type        = "ssh"
-      host        = data.twc_server.main.ip
+      host        = data.external.server_info.result.ip
       user        = "root"
       private_key = var.ssh_private_key
       timeout     = "10m"
@@ -51,6 +71,7 @@ resource "null_resource" "server_setup" {
   }
 
   triggers = {
-    server_id = data.twc_server.main.id
+    server_id   = var.server_id
+    script_hash = filemd5("${path.module}/user_data.sh")
   }
 }

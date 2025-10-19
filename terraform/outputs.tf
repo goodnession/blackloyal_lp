@@ -18,6 +18,11 @@ output "domain_name" {
   value       = module.dns.domain_name
 }
 
+output "domain" {
+  description = "Domain name (alias)"
+  value       = var.domain
+}
+
 output "firewall_id" {
   description = "ID of the firewall"
   value       = module.security.firewall_id

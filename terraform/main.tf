@@ -10,6 +10,7 @@ module "server" {
   ssh_public_key  = var.ssh_public_key
   ssh_private_key = var.ssh_private_key
   domain          = var.domain
+  twc_token       = var.twc_token
 }
 
 # DNS module

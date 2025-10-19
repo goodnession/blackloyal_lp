@@ -132,10 +132,11 @@ jobs:
           SERVER_IP=$(terraform output -raw server_ip)
           echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
         env:
-          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
-          SERVER_ID: ${{ secrets.SERVER_ID }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          TF_VAR_twc_token: ${{ secrets.TWC_TOKEN }}
+          TF_VAR_server_id: ${{ secrets.SERVER_ID }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+          TF_VAR_ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          TF_VAR_domain: ${{ secrets.DOMAIN }}
 
       - name: Deploy Application
         uses: appleboy/ssh-action@v1.0.3
@@ -221,5 +222,9 @@ jobs:
           echo "Health check failed after 5 attempts"
           exit 1
         env:
-          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
+          TF_VAR_twc_token: ${{ secrets.TWC_TOKEN }}
+          TF_VAR_server_id: ${{ secrets.SERVER_ID }}
+          TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+          TF_VAR_ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          TF_VAR_domain: ${{ secrets.DOMAIN }}
 
