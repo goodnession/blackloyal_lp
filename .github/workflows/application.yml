@@ -138,18 +138,8 @@ jobs:
             
             echo "Starting application deployment..."
             
-            # Clone repository if not exists
-            if [ ! -d "/opt/blackloyal/.git" ]; then
-              echo "Cloning repository..."
-              rm -rf /opt/blackloyal
-              git clone git@github.com:${{ github.repository }}.git /opt/blackloyal
-            else
-              echo "Updating repository..."
-              cd /opt/blackloyal
-              git fetch origin
-              git reset --hard origin/main
-            fi
-            
+            # Create directory structure
+            mkdir -p /opt/blackloyal/frontend
             cd /opt/blackloyal/frontend
             
             # Create .env.production from GitHub Secrets
@@ -176,18 +166,84 @@ jobs:
             echo "Pulling Docker image..."
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             
-            # Update docker-compose to use registry image
-            cp docker-compose.prod.yml docker-compose.prod.yml.bak
-            sed -i 's|build:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest|g' docker-compose.prod.yml
-            sed -i '/context:/d' docker-compose.prod.yml
-            sed -i '/dockerfile:/d' docker-compose.prod.yml
+            # Create docker-compose.yml
+            echo "Creating docker-compose configuration..."
+            cat > docker-compose.yml << 'COMPOSEEOF'
+            version: '3.8'
             
-            # Restart application
-            echo "Restarting application..."
-            docker-compose -f docker-compose.prod.yml down
-            docker-compose -f docker-compose.prod.yml up -d
+            services:
+              reverse-proxy:
+                image: traefik:v3.0
+                container_name: traefik
+                restart: unless-stopped
+                command:
+                  - "--api.dashboard=true"
+                  - "--providers.docker=true"
+                  - "--providers.docker.exposedbydefault=false"
+                  - "--entrypoints.web.address=:80"
+                  - "--entrypoints.websecure.address=:443"
+                  - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+                  - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+                  - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+                  - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+                  - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+                  - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+                ports:
+                  - "80:80"
+                  - "443:443"
+                volumes:
+                  - /var/run/docker.sock:/var/run/docker.sock:ro
+                  - traefik-certs:/letsencrypt
+                networks:
+                  - web
+                labels:
+                  - "traefik.enable=true"
+                  - "traefik.http.routers.dashboard.rule=Host(\`traefik.${DOMAIN}\`)"
+                  - "traefik.http.routers.dashboard.service=api@internal"
+                  - "traefik.http.routers.dashboard.entrypoints=websecure"
+                  - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+                  - "traefik.http.routers.dashboard.middlewares=auth"
+                  - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
             
-            # Clean up
+              app:
+                image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+                container_name: blackloyal-app
+                restart: unless-stopped
+                env_file:
+                  - .env.production
+                networks:
+                  - web
+                labels:
+                  - "traefik.enable=true"
+                  - "traefik.http.routers.app.rule=Host(\`${DOMAIN}\`)"
+                  - "traefik.http.routers.app.entrypoints=websecure"
+                  - "traefik.http.routers.app.tls.certresolver=letsencrypt"
+                  - "traefik.http.services.app.loadbalancer.server.port=3000"
+                healthcheck:
+                  test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+                  interval: 30s
+                  timeout: 3s
+                  retries: 3
+                  start_period: 40s
+            
+            networks:
+              web:
+                driver: bridge
+            
+            volumes:
+              traefik-certs:
+            COMPOSEEOF
+            
+            # Stop existing containers
+            echo "Stopping existing containers..."
+            docker-compose down 2>/dev/null || true
+            
+            # Start new containers
+            echo "Starting application..."
+            docker-compose up -d
+            
+            # Clean up old images
+            echo "Cleaning up old Docker images..."
             docker image prune -f
             
             echo "Application deployment completed successfully!"
@@ -197,14 +253,9 @@ jobs:
           echo "Waiting for application to start..."
           sleep 30
           
-          # Get domain from Terraform output
-          cd terraform
-          terraform init
-          DOMAIN=$(terraform output -raw domain)
-          
           # Health check with retries
           for i in {1..5}; do
-            if curl -f "https://$DOMAIN/api/health"; then
+            if curl -f "https://${{ secrets.DOMAIN }}/api/health"; then
               echo "Health check passed!"
               exit 0
             fi
@@ -214,10 +265,4 @@ jobs:
           
           echo "Health check failed after 5 attempts"
           exit 1
-        env:
-          TF_VAR_twc_token: ${{ secrets.TWC_TOKEN }}
-          TF_VAR_server_id: ${{ secrets.SERVER_ID }}
-          TF_VAR_server_ip: ${{ secrets.SERVER_IP }}
-          TF_VAR_ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          TF_VAR_domain: ${{ secrets.DOMAIN }}
 

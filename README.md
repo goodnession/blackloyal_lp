@@ -321,36 +321,9 @@ Terraform создаст:
 
 > ⚠️ **Примечание**: 
 > - Terraform НЕ управляет DNS и Firewall из-за ограничений провайдера Timeweb Cloud
-> - После Terraform сервер покажет placeholder - это нормально! Настоящее приложение нужно задеплоить отдельно (см. шаг 5)
+> - После Terraform сервер покажет placeholder - это нормально! Настоящее приложение нужно задеплоить отдельно (см. шаг 4)
 
-**4. Добавьте deploy key на GitHub (один раз):**
-
-```bash
-# Подключитесь к серверу
-ssh root@your-server-ip
-
-# Создайте SSH ключ для доступа к GitHub
-ssh-keygen -t rsa -b 4096 -C "server-deploy-key" -f ~/.ssh/github_deploy
-cat ~/.ssh/github_deploy.pub
-```
-
-Добавьте публичный ключ в GitHub:
-- Settings → SSH and GPG keys → New SSH key
-- Title: `server-deploy-key`
-- Key: содержимое `~/.ssh/github_deploy.pub`
-
-Настройте SSH config на сервере:
-   ```bash
-cat >> ~/.ssh/config << 'EOF'
-Host github.com
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/github_deploy
-  StrictHostKeyChecking no
-EOF
-```
-
-**5. Деплой приложения:**
+**4. Деплой приложения:**
 
 Теперь нужно задеплоить настоящее Nuxt приложение:
 
@@ -369,10 +342,13 @@ GitHub Actions автоматически:
 1. Соберет и протестирует приложение
 2. Создаст Docker образ и загрузит в GitHub Container Registry
 3. Подключится к серверу по SSH
-4. Клонирует репозиторий (если первый раз) или обновит код
+4. Создаст директорию `/opt/blackloyal/frontend`
 5. Создаст `.env.production` из GitHub Secrets
-6. Загрузит Docker образ и запустит контейнеры
-7. Проверит работоспособность через health check
+6. Создаст `docker-compose.yml` с конфигурацией Traefik + приложение
+7. Загрузит Docker образ из GHCR и запустит контейнеры
+8. Проверит работоспособность через health check
+
+> 💡 **Примечание**: Деплой НЕ клонирует репозиторий на сервер. Всё приложение находится в Docker образе.
 
 > 💡 **Важно**: Убедитесь, что права доступа к GHCR настроены (см. раздел "Настройка прав доступа к GitHub Container Registry" выше)
 
@@ -595,6 +571,17 @@ cat .env.production | grep TELEGRAM
 2. Выберите **"Read and write permissions"**
 3. Нажмите **Save**
 4. Повторите деплой (push в main или запустите workflow вручную)
+
+### Git: Host key verification failed
+
+**Причина:** Деплой больше НЕ клонирует репозиторий (это старое поведение)
+
+**Решение:**
+✅ УЖЕ ИСПРАВЛЕНО в текущей версии! Деплой использует только Docker образ из GHCR.
+
+Если вы всё ещё видите эту ошибку:
+1. Убедитесь, что вы используете актуальную версию `.github/workflows/application.yml`
+2. Workflow создаёт `docker-compose.yml` на сервере, а не клонирует репозиторий
 
 ### Docker: authentication required при pull образа
 
