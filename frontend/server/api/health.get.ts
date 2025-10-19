@@ -1,8 +1,8 @@
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
   return {
     status: 'ok',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    version: process.env.npm_package_version || '1.0.0'
+    version: process.env.npm_package_version || '1.0.0',
   }
 })

@@ -3,14 +3,14 @@
     <div class="container-custom max-w-4xl">
       <div class="prose prose-lg max-w-none">
         <h1>ПРИЛОЖЕНИЕ № 4</h1>
-        
+
         <h2>ПРАВИЛА ИСПОЛЬЗОВАНИЯ ЛУТКЕЙСОВ</h2>
 
         <h3>(версия для договора)</h3>
 
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
           <p class="text-blue-800">
-            <strong>Важно:</strong> Данные правила определяют условия использования луткейсов 
+            <strong>Важно:</strong> Данные правила определяют условия использования луткейсов
             и являются неотъемлемой частью публичной оферты.
           </p>
         </div>
@@ -226,12 +226,42 @@
         <p>10.2.2. Настоящие Правила дополняют, но не заменяют основные условия договора.</p>
 
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mt-8">
-          <h3 class="text-blue-800 mb-2">Связанные документы:</h3>
+          <h3 class="text-blue-800 mb-2">
+            Связанные документы:
+          </h3>
           <ul class="text-blue-800">
-            <li><NuxtLink to="/offer" class="text-blue-600 hover:text-blue-800 underline">Основная публичная оферта</NuxtLink></li>
-            <li><NuxtLink to="/tariffs" class="text-blue-600 hover:text-blue-800 underline">Приложение № 1: Тарифы и порядок расчетов</NuxtLink></li>
-            <li><NuxtLink to="/sla" class="text-blue-600 hover:text-blue-800 underline">Приложение № 2: Соглашение об уровне обслуживания (SLA)</NuxtLink></li>
-            <li><NuxtLink to="/dpa" class="text-blue-600 hover:text-blue-800 underline">Приложение № 3: Поручение на обработку персональных данных (DPA)</NuxtLink></li>
+            <li>
+              <NuxtLink
+                to="/offer"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Основная публичная оферта
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/tariffs"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 1: Тарифы и порядок расчетов
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/sla"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 2: Соглашение об уровне обслуживания (SLA)
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/dpa"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 3: Поручение на обработку персональных данных (DPA)
+              </NuxtLink>
+            </li>
           </ul>
         </div>
 

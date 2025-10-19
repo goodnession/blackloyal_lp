@@ -3,12 +3,12 @@
     <div class="container-custom max-w-4xl">
       <div class="prose prose-lg max-w-none">
         <h1>ПРИЛОЖЕНИЕ № 3 К ПУБЛИЧНОЙ ОФЕРТЕ</h1>
-        
+
         <h2>ПОРУЧЕНИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ (DPA)</h2>
 
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
           <p class="text-blue-800">
-            <strong>Важно:</strong> Данное поручение определяет условия обработки персональных данных 
+            <strong>Важно:</strong> Данное поручение определяет условия обработки персональных данных
             в соответствии с требованиями Федерального закона № 152-ФЗ "О персональных данных".
           </p>
         </div>
@@ -273,7 +273,9 @@
 
         <div class="grid md:grid-cols-2 gap-6">
           <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="font-bold mb-4">ОПЕРАТОР:</h3>
+            <h3 class="font-bold mb-4">
+              ОПЕРАТОР:
+            </h3>
             <div class="text-sm">
               <p><strong>[НАИМЕНОВАНИЕ КОМПЬЮТЕРНОГО КЛУБА]</strong></p>
               <p>Юридический адрес: [АДРЕС]</p>
@@ -287,14 +289,18 @@
               <p>Банк: [НАИМЕНОВАНИЕ БАНКА]</p>
               <p>БИК: [БИК]</p>
               <p>К/с: [КОРРЕСПОНДЕНТСКИЙ СЧЕТ]</p>
-              <p class="mt-4">В лице [ДОЛЖНОСТЬ] [ФИО]</p>
+              <p class="mt-4">
+                В лице [ДОЛЖНОСТЬ] [ФИО]
+              </p>
               <p>Подпись: _________________ /[ФИО]/</p>
               <p>М.П.</p>
             </div>
           </div>
 
           <div class="bg-gray-50 p-6 rounded-lg">
-            <h3 class="font-bold mb-4">ОБРАБОТЧИК:</h3>
+            <h3 class="font-bold mb-4">
+              ОБРАБОТЧИК:
+            </h3>
             <div class="text-sm">
               <p><strong>Индивидуальный предприниматель [ФИО]</strong></p>
               <p>ИНН: [ИНН]</p>
@@ -308,18 +314,50 @@
               <p>Банк: [НАИМЕНОВАНИЕ БАНКА]</p>
               <p>БИК: [БИК]</p>
               <p>К/с: [КОРРЕСПОНДЕНТСКИЙ СЧЕТ]</p>
-              <p class="mt-4">Подпись: _________________ /[ФИО]/</p>
+              <p class="mt-4">
+                Подпись: _________________ /[ФИО]/
+              </p>
             </div>
           </div>
         </div>
 
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mt-8">
-          <h3 class="text-blue-800 mb-2">Связанные документы:</h3>
+          <h3 class="text-blue-800 mb-2">
+            Связанные документы:
+          </h3>
           <ul class="text-blue-800">
-            <li><NuxtLink to="/offer" class="text-blue-600 hover:text-blue-800 underline">Основная публичная оферта</NuxtLink></li>
-            <li><NuxtLink to="/tariffs" class="text-blue-600 hover:text-blue-800 underline">Приложение № 1: Тарифы и порядок расчетов</NuxtLink></li>
-            <li><NuxtLink to="/sla" class="text-blue-600 hover:text-blue-800 underline">Приложение № 2: Соглашение об уровне обслуживания (SLA)</NuxtLink></li>
-            <li><NuxtLink to="/lootcase-rules" class="text-blue-600 hover:text-blue-800 underline">Приложение № 4: Правила использования луткейсов</NuxtLink></li>
+            <li>
+              <NuxtLink
+                to="/offer"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Основная публичная оферта
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/tariffs"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 1: Тарифы и порядок расчетов
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/sla"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 2: Соглашение об уровне обслуживания (SLA)
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/lootcase-rules"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 4: Правила использования луткейсов
+              </NuxtLink>
+            </li>
           </ul>
         </div>
 

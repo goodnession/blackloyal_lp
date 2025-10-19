@@ -3,12 +3,12 @@
     <div class="container-custom max-w-4xl">
       <div class="prose prose-lg max-w-none">
         <h1>ПРИЛОЖЕНИЕ № 2 К ПУБЛИЧНОЙ ОФЕРТЕ</h1>
-        
+
         <h2>СОГЛАШЕНИЕ ОБ УРОВНЕ ОБСЛУЖИВАНИЯ (SLA)</h2>
 
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
           <p class="text-blue-800">
-            <strong>Важно:</strong> Данное соглашение определяет гарантированные параметры качества 
+            <strong>Важно:</strong> Данное соглашение определяет гарантированные параметры качества
             оказания услуг и является неотъемлемой частью публичной оферты.
           </p>
         </div>
@@ -120,30 +120,54 @@
           <table class="min-w-full bg-white border border-gray-300">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-4 py-2 border border-gray-300 text-left">Фактическая доступность</th>
-                <th class="px-4 py-2 border border-gray-300 text-left">Размер кредита от месячного платежа</th>
+                <th class="px-4 py-2 border border-gray-300 text-left">
+                  Фактическая доступность
+                </th>
+                <th class="px-4 py-2 border border-gray-300 text-left">
+                  Размер кредита от месячного платежа
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="px-4 py-2 border border-gray-300">99,0% - 99,49%</td>
-                <td class="px-4 py-2 border border-gray-300">5%</td>
+                <td class="px-4 py-2 border border-gray-300">
+                  99,0% - 99,49%
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                  5%
+                </td>
               </tr>
               <tr>
-                <td class="px-4 py-2 border border-gray-300">98,0% - 98,99%</td>
-                <td class="px-4 py-2 border border-gray-300">10%</td>
+                <td class="px-4 py-2 border border-gray-300">
+                  98,0% - 98,99%
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                  10%
+                </td>
               </tr>
               <tr>
-                <td class="px-4 py-2 border border-gray-300">97,0% - 97,99%</td>
-                <td class="px-4 py-2 border border-gray-300">20%</td>
+                <td class="px-4 py-2 border border-gray-300">
+                  97,0% - 97,99%
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                  20%
+                </td>
               </tr>
               <tr>
-                <td class="px-4 py-2 border border-gray-300">95,0% - 96,99%</td>
-                <td class="px-4 py-2 border border-gray-300">35%</td>
+                <td class="px-4 py-2 border border-gray-300">
+                  95,0% - 96,99%
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                  35%
+                </td>
               </tr>
               <tr>
-                <td class="px-4 py-2 border border-gray-300">Менее 95,0%</td>
-                <td class="px-4 py-2 border border-gray-300">50%</td>
+                <td class="px-4 py-2 border border-gray-300">
+                  Менее 95,0%
+                </td>
+                <td class="px-4 py-2 border border-gray-300">
+                  50%
+                </td>
               </tr>
             </tbody>
           </table>
@@ -231,12 +255,42 @@
         </div>
 
         <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mt-8">
-          <h3 class="text-blue-800 mb-2">Связанные документы:</h3>
+          <h3 class="text-blue-800 mb-2">
+            Связанные документы:
+          </h3>
           <ul class="text-blue-800">
-            <li><NuxtLink to="/offer" class="text-blue-600 hover:text-blue-800 underline">Основная публичная оферта</NuxtLink></li>
-            <li><NuxtLink to="/tariffs" class="text-blue-600 hover:text-blue-800 underline">Приложение № 1: Тарифы и порядок расчетов</NuxtLink></li>
-            <li><NuxtLink to="/dpa" class="text-blue-600 hover:text-blue-800 underline">Приложение № 3: Поручение на обработку персональных данных (DPA)</NuxtLink></li>
-            <li><NuxtLink to="/lootcase-rules" class="text-blue-600 hover:text-blue-800 underline">Приложение № 4: Правила использования луткейсов</NuxtLink></li>
+            <li>
+              <NuxtLink
+                to="/offer"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Основная публичная оферта
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/tariffs"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 1: Тарифы и порядок расчетов
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/dpa"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 3: Поручение на обработку персональных данных (DPA)
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/lootcase-rules"
+                class="text-blue-600 hover:text-blue-800 underline"
+              >
+                Приложение № 4: Правила использования луткейсов
+              </NuxtLink>
+            </li>
           </ul>
         </div>
 

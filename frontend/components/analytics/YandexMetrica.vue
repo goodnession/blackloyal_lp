@@ -5,8 +5,8 @@
       v-if="consentGiven"
       type="text/javascript"
       :innerHTML="metricaScript"
-    ></script>
-    
+    />
+
     <!-- Cookie Consent Banner -->
     <div
       v-if="!consentGiven && !consentDismissed"
@@ -15,26 +15,31 @@
       <div class="container-custom py-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
           <div class="flex-1">
-            <h3 class="font-semibold text-gray-900 mb-2">Мы используем cookies</h3>
+            <h3 class="font-semibold text-gray-900 mb-2">
+              Мы используем cookies
+            </h3>
             <p class="text-sm text-gray-600">
-              Для улучшения работы сайта и анализа посещаемости мы используем файлы cookie. 
-              Продолжая использовать сайт, вы соглашаетесь с 
-              <NuxtLink to="/privacy" class="text-primary-600 hover:underline">
+              Для улучшения работы сайта и анализа посещаемости мы используем файлы cookie.
+              Продолжая использовать сайт, вы соглашаетесь с
+              <NuxtLink
+                to="/privacy"
+                class="text-primary-600 hover:underline"
+              >
                 политикой конфиденциальности
               </NuxtLink>.
             </p>
           </div>
-          
+
           <div class="flex gap-3">
             <button
-              @click="acceptCookies"
               class="btn-primary btn-sm"
+              @click="acceptCookies"
             >
               Принять
             </button>
             <button
-              @click="declineCookies"
               class="btn-secondary btn-sm"
+              @click="declineCookies"
             >
               Отклонить
             </button>
@@ -52,11 +57,12 @@ const consentDismissed = ref(false)
 
 // Check for existing consent
 onMounted(() => {
-  if (process.client) {
+  if (import.meta.client) {
     const savedConsent = localStorage.getItem('cookie-consent')
     if (savedConsent === 'accepted') {
       consentGiven.value = true
-    } else if (savedConsent === 'declined') {
+    }
+    else if (savedConsent === 'declined') {
       consentDismissed.value = true
     }
   }
@@ -65,7 +71,7 @@ onMounted(() => {
 // Yandex Metrica script
 const metricaScript = computed(() => {
   if (!config.public.analyticsId) return ''
-  
+
   return `
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
@@ -81,11 +87,11 @@ const metricaScript = computed(() => {
 })
 
 const acceptCookies = () => {
-  if (process.client) {
+  if (import.meta.client) {
     localStorage.setItem('cookie-consent', 'accepted')
     consentGiven.value = true
     consentDismissed.value = true
-    
+
     // Track consent acceptance
     if (window.ym && config.public.analyticsId) {
       window.ym(config.public.analyticsId, 'reachGoal', 'COOKIE_CONSENT_ACCEPTED')
@@ -94,7 +100,7 @@ const acceptCookies = () => {
 }
 
 const declineCookies = () => {
-  if (process.client) {
+  if (import.meta.client) {
     localStorage.setItem('cookie-consent', 'declined')
     consentDismissed.value = true
   }
@@ -102,7 +108,7 @@ const declineCookies = () => {
 
 // Track page views
 watch(() => useRoute().path, () => {
-  if (process.client && consentGiven.value && window.ym && config.public.analyticsId) {
+  if (import.meta.client && consentGiven.value && window.ym && config.public.analyticsId) {
     window.ym(config.public.analyticsId, 'hit', window.location.href)
   }
 })
