@@ -20,20 +20,8 @@ variable "server_ip" {
   type        = string
 }
 
-variable "ssh_key_name" {
-  description = "SSH key name for server access"
-  type        = string
-  default     = "blackloyal-key"
-}
-
-variable "ssh_public_key" {
-  description = "SSH public key content"
-  type        = string
-  sensitive   = true
-}
-
 variable "ssh_private_key" {
-  description = "SSH private key content"
+  description = "SSH private key content for connecting to server (must already be added to server)"
   type        = string
   sensitive   = true
 }

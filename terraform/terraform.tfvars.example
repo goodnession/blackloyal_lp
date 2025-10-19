@@ -12,8 +12,8 @@ server_id = "your_existing_server_id"
 server_ip = "123.456.789.0"
 
 # SSH configuration
-ssh_key_name = "blackloyal-key"
-ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC... your-public-key"
+# NOTE: SSH public key must be manually added to the server before running Terraform
+# Add your public key to /root/.ssh/authorized_keys on the server
 ssh_private_key = "-----BEGIN OPENSSH PRIVATE KEY-----\nb3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn\n...\n-----END OPENSSH PRIVATE KEY-----"
 
 # Project name

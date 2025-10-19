@@ -51,17 +51,17 @@ jobs:
 
       - name: Terraform Plan
         if: github.event.inputs.action == 'plan' || github.event_name == 'push'
-        run: terraform plan -var="twc_token=${{ secrets.TWC_TOKEN }}" -var="server_id=${{ secrets.SERVER_ID }}" -var="server_ip=${{ secrets.SERVER_IP }}" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" -var="ssh_private_key=${{ secrets.SSH_PRIVATE_KEY }}"
+        run: terraform plan -var="twc_token=${{ secrets.TWC_TOKEN }}" -var="server_id=${{ secrets.SERVER_ID }}" -var="server_ip=${{ secrets.SERVER_IP }}" -var="ssh_private_key=${{ secrets.SSH_PRIVATE_KEY }}"
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Terraform Apply
         if: github.event.inputs.action == 'apply'
-        run: terraform apply -auto-approve -var="twc_token=${{ secrets.TWC_TOKEN }}" -var="server_id=${{ secrets.SERVER_ID }}" -var="server_ip=${{ secrets.SERVER_IP }}" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" -var="ssh_private_key=${{ secrets.SSH_PRIVATE_KEY }}"
+        run: terraform apply -auto-approve -var="twc_token=${{ secrets.TWC_TOKEN }}" -var="server_id=${{ secrets.SERVER_ID }}" -var="server_ip=${{ secrets.SERVER_IP }}" -var="ssh_private_key=${{ secrets.SSH_PRIVATE_KEY }}"
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
-        run: terraform destroy -auto-approve -var="twc_token=${{ secrets.TWC_TOKEN }}" -var="server_id=${{ secrets.SERVER_ID }}" -var="server_ip=${{ secrets.SERVER_IP }}" -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" -var="ssh_private_key=${{ secrets.SSH_PRIVATE_KEY }}"
+        run: terraform destroy -auto-approve -var="twc_token=${{ secrets.TWC_TOKEN }}" -var="server_id=${{ secrets.SERVER_ID }}" -var="server_ip=${{ secrets.SERVER_IP }}" -var="ssh_private_key=${{ secrets.SSH_PRIVATE_KEY }}"
         working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Output Infrastructure Info

@@ -176,10 +176,10 @@ htpasswd -nb admin your_password
 
 Инструкция по генерации SSH ключей: [Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 
-После создания ключей получите их содержимое:
+После создания ключей:
 
    ```bash
-# Публичный ключ (для GitHub Secrets: SSH_PUBLIC_KEY)
+# Публичный ключ (добавьте на сервер вручную)
 cat ~/.ssh/id_rsa.pub
 
 # Приватный ключ (для GitHub Secrets: SSH_PRIVATE_KEY)
@@ -199,7 +199,6 @@ Settings → Secrets and variables → Actions → New repository secret
 | `TWC_TOKEN` | API токен Timeweb Cloud | timeweb.cloud/my/api-keys |
 | `SERVER_ID` | ID сервера в Timeweb | timeweb.cloud/my/servers (ID в колонке или URL) |
 | `SERVER_IP` | IP адрес сервера | timeweb.cloud/my/servers (IP в колонке) |
-| `SSH_PUBLIC_KEY` | SSH публичный ключ | `cat ~/.ssh/id_rsa.pub` |
 | `SSH_PRIVATE_KEY` | SSH приватный ключ | `cat ~/.ssh/id_rsa` (полностью с заголовками) |
 | `TELEGRAM_BOT_TOKEN` | Токен Telegram бота | @BotFather в Telegram |
 | `TELEGRAM_CHAT_ID` | ID чата для уведомлений | См. [Переменные окружения](#переменные-окружения) |
@@ -228,8 +227,8 @@ Settings → Secrets and variables → Actions → New repository secret
 
 1. Домен зарегистрирован в Timeweb Cloud
 2. VPS сервер создан в Timeweb (Ubuntu 22.04, минимум 2GB RAM)
-3. GitHub Secrets настроены
-4. SSH ключи созданы
+3. **SSH публичный ключ добавлен на сервер** (в `/root/.ssh/authorized_keys`)
+4. GitHub Secrets настроены
 5. DNS настроен вручную (A-запись на IP сервера)
 
 ### Деплой через GitHub Actions (рекомендуется)
@@ -252,19 +251,32 @@ twc_token = "your_api_token"
 domain = "your-domain.ru"
 server_id = "your_server_id"
 server_ip = "123.456.789.0"
-ssh_key_name = "blackloyal-key"
-ssh_public_key = "ssh-rsa AAAAB3..."
 ssh_private_key = "-----BEGIN OPENSSH PRIVATE KEY-----\n...\n-----END OPENSSH PRIVATE KEY-----"
 project_name = "blackloyal"
 ```
 
+> ⚠️ **Важно**: Перед запуском Terraform убедитесь, что ваш SSH публичный ключ добавлен на сервер в `/root/.ssh/authorized_keys`
+
 ### Запуск инфраструктуры
 
-**1. Настройте DNS вручную:**
+**1. Добавьте SSH ключ на сервер:**
+```bash
+# Подключитесь к серверу (используйте пароль из панели Timeweb)
+ssh root@your-server-ip
+
+# Добавьте ваш публичный ключ
+mkdir -p ~/.ssh
+echo "ssh-rsa AAAAB3... your-public-key" >> ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+exit
+```
+
+**2. Настройте DNS вручную:**
 - В панели Timeweb Cloud создайте A-запись домена на IP сервера
 - (опционально) Создайте CNAME запись для www
 
-**2. Запустите Terraform (создание инфраструктуры):**
+**3. Запустите Terraform (создание инфраструктуры):**
 - Actions → Infrastructure Management → Run workflow
 - Выберите action: `apply`
 - Дождитесь завершения (5-10 мин)
@@ -276,7 +288,7 @@ Terraform создаст:
 
 > ⚠️ **Примечание**: Terraform НЕ управляет DNS и Firewall из-за ограничений провайдера Timeweb Cloud.
 
-**3. Добавьте deploy key на GitHub (один раз):**
+**4. Добавьте deploy key на GitHub (один раз):**
 
 ```bash
 # Подключитесь к серверу
@@ -303,7 +315,7 @@ Host github.com
 EOF
 ```
 
-**4. Деплой приложения (автоматический):**
+**5. Деплой приложения (автоматический):**
 
    ```bash
 # Сделайте изменения в коде
