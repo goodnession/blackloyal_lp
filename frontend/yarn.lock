@@ -4000,6 +4000,7 @@ __metadata:
     autoprefixer: "npm:^10.4.20"
     axios: "npm:^1.7.9"
     eslint: "npm:^9.17.0"
+    izitoast: "npm:^1.4.0"
     nuxt: "npm:^4.1.2"
     nuxt-toast: "npm:^1.1.4"
     postcss: "npm:^8.4.49"
@@ -6962,6 +6963,13 @@ __metadata:
   version: 3.1.1
   resolution: "isexe@npm:3.1.1"
   checksum: 10c0/9ec257654093443eb0a528a9c8cbba9c0ca7616ccb40abd6dde7202734d96bb86e4ac0d764f0f8cd965856aacbff2f4ce23e730dc19dfb41e3b0d865ca6fdcc7
+  languageName: node
+  linkType: hard
+
+"izitoast@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "izitoast@npm:1.4.0"
+  checksum: 10c0/8aace597d46a0329356fbec34872469f7bced397b00e1971e6fa5530ce6865e0f585ffc82cc6cb485e33079b24cc6490737307dd300be82afb1148cf6cda775e
   languageName: node
   linkType: hard
 
