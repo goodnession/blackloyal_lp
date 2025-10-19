@@ -73,29 +73,29 @@ blackloyal_lp/
 
 ### Требования
 
-- Node.js 18+
+- Node.js 18+ 
 - Yarn 3+
 - Docker (опционально)
 
 ### Установка
 
-```bash
+   ```bash
 # Клонировать репозиторий
-git clone <repository-url>
+   git clone <repository-url>
 cd blackloyal_lp/frontend
 
 # Создать конфигурацию
-cp .env.example .env.development
+   cp .env.example .env.development
 
 # Установить зависимости
-yarn install
+   yarn install
 
 # Запустить dev сервер
-yarn dev
-
-# Или через Docker
+   yarn dev
+   
+   # Или через Docker
 docker-compose -f docker-compose.dev.yml up
-```
+   ```
 
 ### Доступные команды
 
@@ -172,25 +172,16 @@ htpasswd -nb admin your_password
 
 ## Настройка SSH
 
-### Создание ключей
+Инструкция по генерации SSH ключей: [Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 
-```bash
-# Создать новую пару
-ssh-keygen -t rsa -b 4096 -C "deployment-key"
+После создания ключей получите их содержимое:
 
+   ```bash
 # Публичный ключ (для GitHub Secrets: SSH_PUBLIC_KEY)
 cat ~/.ssh/id_rsa.pub
 
 # Приватный ключ (для GitHub Secrets: SSH_PRIVATE_KEY)
 cat ~/.ssh/id_rsa
-```
-
-### Проверка ключей
-
-```bash
-# Проверка формата
-ssh-keygen -l -f ~/.ssh/id_rsa.pub
-ssh-keygen -l -f ~/.ssh/id_rsa
 ```
 
 ---
@@ -218,9 +209,9 @@ Settings → Secrets and variables → Actions → New repository secret
 
 ### Получение SERVER_ID через API
 
-```bash
-curl -H "Authorization: Bearer YOUR_TWC_TOKEN" \
-     https://api.timeweb.cloud/api/v1/servers
+   ```bash
+   curl -H "Authorization: Bearer YOUR_TWC_TOKEN" \
+        https://api.timeweb.cloud/api/v1/servers
 ```
 
 ---
@@ -242,9 +233,9 @@ curl -H "Authorization: Bearer YOUR_TWC_TOKEN" \
 
 Только если хотите запускать Terraform локально:
 
-```bash
-cd terraform
-cp terraform.tfvars.example terraform.tfvars
+   ```bash
+   cd terraform
+   cp terraform.tfvars.example terraform.tfvars
 ```
 
 Заполните `terraform.tfvars`:
@@ -289,7 +280,7 @@ cat ~/.ssh/github_deploy.pub
 - Key: содержимое `~/.ssh/github_deploy.pub`
 
 Настройте SSH config на сервере:
-```bash
+   ```bash
 cat >> ~/.ssh/config << 'EOF'
 Host github.com
   HostName github.com
@@ -301,7 +292,7 @@ EOF
 
 **3. Деплой приложения (автоматический):**
 
-```bash
+   ```bash
 # Сделайте изменения в коде
 git add .
 git commit -m "Initial deployment"
