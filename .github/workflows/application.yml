@@ -127,28 +127,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: '1.6.0'
-
-      - name: Get Server IP
-        run: |
-          cd terraform
-          terraform init
-          SERVER_IP=$(terraform output -raw server_ip)
-          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
-        env:
-          TF_VAR_twc_token: ${{ secrets.TWC_TOKEN }}
-          TF_VAR_server_id: ${{ secrets.SERVER_ID }}
-          TF_VAR_server_ip: ${{ secrets.SERVER_IP }}
-          TF_VAR_ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          TF_VAR_domain: ${{ secrets.DOMAIN }}
-
       - name: Deploy Application
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |

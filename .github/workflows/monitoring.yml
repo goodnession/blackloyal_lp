@@ -17,9 +17,6 @@ on:
           - backup
           - security-update
 
-env:
-  TF_VERSION: '1.6.0'
-
 jobs:
   health-check:
     name: Health Check
@@ -30,29 +27,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Get Infrastructure Info
-        run: |
-          cd terraform
-          terraform init
-          SERVER_IP=$(terraform output -raw server_ip)
-          DOMAIN=$(terraform output -raw domain)
-          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
-          echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
-        env:
-          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
-          SERVER_ID: ${{ secrets.SERVER_ID }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Check Application Health
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -84,7 +62,7 @@ jobs:
             
             # Check SSL certificate expiry
             echo "=== SSL Certificate Status ===" >> /tmp/health_report.txt
-            echo | openssl s_client -servername ${{ env.DOMAIN }} -connect ${{ env.DOMAIN }}:443 2>/dev/null | openssl x509 -noout -dates || echo "SSL check failed" >> /tmp/health_report.txt
+            echo | openssl s_client -servername ${{ secrets.DOMAIN }} -connect ${{ secrets.DOMAIN }}:443 2>/dev/null | openssl x509 -noout -dates || echo "SSL check failed" >> /tmp/health_report.txt
             
             cat /tmp/health_report.txt
 
@@ -93,7 +71,7 @@ jobs:
           echo "Testing application endpoints..."
           
           # Test health endpoint
-          if curl -f "https://${{ env.DOMAIN }}/api/health"; then
+          if curl -f "https://${{ secrets.DOMAIN }}/api/health"; then
             echo "✅ Health endpoint is working"
           else
             echo "❌ Health endpoint failed"
@@ -101,7 +79,7 @@ jobs:
           fi
           
           # Test main page
-          if curl -f "https://${{ env.DOMAIN }}/"; then
+          if curl -f "https://${{ secrets.DOMAIN }}/"; then
             echo "✅ Main page is accessible"
           else
             echo "❌ Main page failed"
@@ -118,27 +96,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Get Server IP
-        run: |
-          cd terraform
-          terraform init
-          SERVER_IP=$(terraform output -raw server_ip)
-          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
-        env:
-          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
-          SERVER_ID: ${{ secrets.SERVER_ID }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Perform Cleanup
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -175,27 +136,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Get Server IP
-        run: |
-          cd terraform
-          terraform init
-          SERVER_IP=$(terraform output -raw server_ip)
-          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
-        env:
-          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
-          SERVER_ID: ${{ secrets.SERVER_ID }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Create Backup
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -217,27 +161,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: ${{ env.TF_VERSION }}
-
-      - name: Get Server IP
-        run: |
-          cd terraform
-          terraform init
-          SERVER_IP=$(terraform output -raw server_ip)
-          echo "SERVER_IP=$SERVER_IP" >> $GITHUB_ENV
-        env:
-          TWC_TOKEN: ${{ secrets.TWC_TOKEN }}
-          SERVER_ID: ${{ secrets.SERVER_ID }}
-          SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
       - name: Apply Security Updates
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
