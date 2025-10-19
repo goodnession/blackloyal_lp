@@ -16,6 +16,7 @@ env:
   NODE_VERSION: '20'
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  DOMAIN: ${{ secrets.DOMAIN || 'blackloyal.ru' }}
 
 jobs:
   test:
@@ -147,31 +148,52 @@ jobs:
             
             echo "Starting application deployment..."
             
-            # Update application code
-            cd /opt/blackloyal
-            git fetch origin
-            git reset --hard origin/main
-            
-            # Update environment variables
-            if [ -f .env.production ]; then
-              echo "Environment file exists, keeping it"
+            # Clone repository if not exists
+            if [ ! -d "/opt/blackloyal/.git" ]; then
+              echo "Cloning repository..."
+              rm -rf /opt/blackloyal
+              git clone git@github.com:${{ github.repository }}.git /opt/blackloyal
             else
-              echo "Creating environment file from template"
-              cp .env.production.example .env.production
+              echo "Updating repository..."
+              cd /opt/blackloyal
+              git fetch origin
+              git reset --hard origin/main
             fi
             
+            cd /opt/blackloyal/frontend
+            
+            # Create .env.production from GitHub Secrets
+            echo "Creating environment file..."
+            cat > .env.production << 'ENVEOF'
+            NUXT_PUBLIC_SITE_URL=${{ secrets.NUXT_PUBLIC_SITE_URL }}
+            DOMAIN=${{ secrets.DOMAIN }}
+            TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
+            TELEGRAM_CHAT_ID=${{ secrets.TELEGRAM_CHAT_ID }}
+            NUXT_PUBLIC_ANALYTICS_ID=${{ secrets.NUXT_PUBLIC_ANALYTICS_ID }}
+            ACME_EMAIL=${{ secrets.ACME_EMAIL }}
+            TRAEFIK_AUTH=${{ secrets.TRAEFIK_AUTH }}
+            NUXT_PUBLIC_TELEGRAM_BOT_USERNAME=${{ secrets.NUXT_PUBLIC_TELEGRAM_BOT_USERNAME }}
+            NODE_ENV=production
+            PORT=3000
+            HOSTNAME=0.0.0.0
+            ENVEOF
+            
             # Pull latest Docker image
+            echo "Pulling Docker image..."
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             
-            # Update docker-compose to use the new image
-            sed -i 's|build:|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest|g' docker-compose.prod.yml
+            # Update docker-compose to use registry image
+            cp docker-compose.prod.yml docker-compose.prod.yml.bak
+            sed -i 's|build:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest|g' docker-compose.prod.yml
+            sed -i '/context:/d' docker-compose.prod.yml
             sed -i '/dockerfile:/d' docker-compose.prod.yml
             
             # Restart application
+            echo "Restarting application..."
             docker-compose -f docker-compose.prod.yml down
             docker-compose -f docker-compose.prod.yml up -d
             
-            # Clean up old images
+            # Clean up
             docker image prune -f
             
             echo "Application deployment completed successfully!"

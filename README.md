@@ -64,7 +64,7 @@ blackloyal_lp/
 │   ├── docker-compose.prod.yml
 │   ├── traefik/
 │   └── backup.sh
-└── index.md                    # Эта документация
+└── README.md                   # Эта документация
 ```
 
 ---
@@ -121,24 +121,24 @@ TELEGRAM_CHAT_ID=your_chat_id
 NUXT_PUBLIC_ANALYTICS_ID=your_metrica_id
 ```
 
-### Продакшен (.env.production на сервере)
+### Продакшен (.env.production)
+
+Создается автоматически GitHub Actions из секретов. 
+
+Если нужно создать вручную на сервере:
 
 ```bash
-# Обязательные
 NUXT_PUBLIC_SITE_URL=https://your-domain.ru
 DOMAIN=your-domain.ru
 TELEGRAM_BOT_TOKEN=production_bot_token
 TELEGRAM_CHAT_ID=production_chat_id
 ACME_EMAIL=admin@your-domain.ru
-
-# Traefik auth (htpasswd формат, $ экранируется как $$)
 TRAEFIK_AUTH=admin:$$apr1$$xyz...
-
-# Опциональные
 NUXT_PUBLIC_ANALYTICS_ID=metrica_counter_id
 NUXT_PUBLIC_TELEGRAM_BOT_USERNAME=bot_username
-CONTACT_PHONE=+7 (XXX) XXX-XX-XX
-CONTACT_EMAIL=hello@your-domain.ru
+NODE_ENV=production
+PORT=3000
+HOSTNAME=0.0.0.0
 ```
 
 ### Как получить значения
@@ -211,6 +211,10 @@ Settings → Secrets and variables → Actions → New repository secret
 | `TELEGRAM_CHAT_ID` | ID чата для уведомлений | См. [Переменные окружения](#переменные-окружения) |
 | `NUXT_PUBLIC_ANALYTICS_ID` | Yandex Metrica ID | metrica.yandex.ru |
 | `NUXT_PUBLIC_SITE_URL` | URL сайта | `https://your-domain.ru` |
+| `DOMAIN` | Домен без протокола | `your-domain.ru` |
+| `ACME_EMAIL` | Email для Let's Encrypt | `admin@your-domain.ru` |
+| `TRAEFIK_AUTH` | Basic auth для Traefik | `htpasswd -nb admin password` ($ → $$) |
+| `NUXT_PUBLIC_TELEGRAM_BOT_USERNAME` | Username бота (опционально) | Без @ |
 
 ### Получение SERVER_ID через API
 
@@ -257,54 +261,64 @@ project_name = "blackloyal"
 
 ### Запуск инфраструктуры
 
-**1. Инфраструктура (через GitHub Actions):**
+**1. Запустите Terraform (создание инфраструктуры):**
 - Actions → Infrastructure Management → Run workflow
 - Выберите action: `apply`
 - Дождитесь завершения (5-10 мин)
-- Terraform возьмет все переменные из GitHub Secrets
 
-**2. Настройка сервера:**
+Terraform создаст:
+- DNS записи для домена
+- Firewall правила
+- Установит Docker, Docker Compose, fail2ban
+- Создаст директорию `/opt/blackloyal`
+
+**2. Добавьте deploy key на GitHub (один раз):**
 
 ```bash
 # Подключитесь к серверу
 ssh root@your-server-ip
 
-# Создайте deploy ключ для GitHub
-ssh-keygen -t rsa -b 4096 -C "server-github"
-cat ~/.ssh/id_rsa.pub
-# Добавьте ключ: GitHub → Settings → SSH and GPG keys → New SSH key
-
-# Клонируйте репозиторий
-cd /opt/blackloyal
-git clone git@github.com:your-username/your-repo.git .
-
-# Создайте .env.production
-cd frontend
-nano .env.production
-# Вставьте конфигурацию из раздела "Переменные окружения"
+# Создайте SSH ключ для доступа к GitHub
+ssh-keygen -t rsa -b 4096 -C "server-deploy-key" -f ~/.ssh/github_deploy
+cat ~/.ssh/github_deploy.pub
 ```
 
-**3. GitHub Container Registry:**
+Добавьте публичный ключ в GitHub:
+- Settings → SSH and GPG keys → New SSH key
+- Title: `server-deploy-key`
+- Key: содержимое `~/.ssh/github_deploy.pub`
 
-Создайте Personal Access Token:
-- GitHub → Settings → Developer settings → Personal access tokens
-- Generate new token (classic)
-- Отметьте: `write:packages`, `read:packages`
-
-На сервере:
+Настройте SSH config на сервере:
 ```bash
-echo "YOUR_GITHUB_TOKEN" | docker login ghcr.io -u your-username --password-stdin
+cat >> ~/.ssh/config << 'EOF'
+Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_deploy
+  StrictHostKeyChecking no
+EOF
 ```
 
-**4. Деплой приложения:**
+**3. Деплой приложения (автоматический):**
 
 ```bash
-# Автоматически при push в main
+# Сделайте изменения в коде
+git add .
+git commit -m "Initial deployment"
 git push origin main
-
-# Или вручную
-# Actions → Application CI/CD → Run workflow
 ```
+
+GitHub Actions автоматически:
+1. Соберет и протестирует приложение
+2. Создаст Docker образ и загрузит в GitHub Container Registry
+3. Подключится к серверу по SSH
+4. Клонирует репозиторий (если первый раз) или обновит код
+5. Создаст `.env.production` из GitHub Secrets
+6. Загрузит Docker образ и запустит контейнеры
+7. Проверит работоспособность через health check
+
+Или запустите вручную:
+- Actions → Application CI/CD → Run workflow
 
 ### Проверка
 
@@ -656,21 +670,16 @@ docker volume prune -f
 ### Обновление приложения
 
 ```bash
-# Локально
+# Локально внесите изменения
 git add .
 git commit -m "Update: описание изменений"
 git push origin main
-
-# GitHub Actions автоматически задеплоит изменения
-# Или запустите вручную: Actions → Application CI/CD → Run workflow
-
-# На сервере (если нужно вручную)
-ssh root@your-server-ip
-cd /opt/blackloyal
-git pull
-cd frontend
-docker-compose -f docker-compose.prod.yml up -d --build
 ```
+
+GitHub Actions автоматически задеплоит изменения.
+
+Или запустите деплой вручную:
+- Actions → Application CI/CD → Run workflow
 
 ### Бэкап
 
