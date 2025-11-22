@@ -22,64 +22,6 @@
             >
               Дорожная карта
             </NuxtLink>
-            <NuxtLink
-              to="/faq"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              FAQ
-            </NuxtLink>
-            <div class="relative group">
-              <button class="text-gray-600 hover:text-gray-900 transition-colors flex items-center">
-                Документы
-                <svg
-                  class="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              <div class="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div class="py-2">
-                  <NuxtLink
-                    to="/offer"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                  >
-                    Договор оферты
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/tariffs"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                  >
-                    Тарифы и расчеты
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/sla"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                  >
-                    Соглашение об уровне обслуживания
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/dpa"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                  >
-                    Обработка персональных данных
-                  </NuxtLink>
-                  <NuxtLink
-                    to="/lootcase-rules"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                  >
-                    Правила использования луткейсов
-                  </NuxtLink>
-                </div>
-              </div>
-            </div>
           </nav>
 
           <div class="flex items-center space-x-4">
@@ -117,66 +59,11 @@
         >
           <nav class="flex flex-col space-y-4">
             <NuxtLink
-              to="/#features"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Возможности
-            </NuxtLink>
-            <NuxtLink
-              to="/#pricing"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Цены
-            </NuxtLink>
-            <NuxtLink
               to="/roadmap"
               class="text-gray-600 hover:text-gray-900 transition-colors"
             >
               Дорожная карта
             </NuxtLink>
-            <NuxtLink
-              to="/faq"
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              FAQ
-            </NuxtLink>
-            <div class="border-t border-gray-200 pt-4">
-              <h4 class="text-sm font-medium text-gray-500 mb-2">
-                Документы
-              </h4>
-              <div class="ml-4 space-y-2">
-                <NuxtLink
-                  to="/offer"
-                  class="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                >
-                  Договор оферты
-                </NuxtLink>
-                <NuxtLink
-                  to="/tariffs"
-                  class="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                >
-                  Тарифы и расчеты
-                </NuxtLink>
-                <NuxtLink
-                  to="/sla"
-                  class="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                >
-                  Соглашение об уровне обслуживания
-                </NuxtLink>
-                <NuxtLink
-                  to="/dpa"
-                  class="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                >
-                  Обработка персональных данных
-                </NuxtLink>
-                <NuxtLink
-                  to="/lootcase-rules"
-                  class="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                >
-                  Правила использования луткейсов
-                </NuxtLink>
-              </div>
-            </div>
             <NuxtLink
               to="/#contact"
               class="btn-primary btn-sm w-fit"
@@ -198,8 +85,8 @@
 
     <footer class="bg-gray-900 text-white">
       <div class="container-custom section-padding">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div class="md:col-span-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
             <div class="flex items-center space-x-2 mb-4">
               <img
                 src="/logo.svg"
@@ -242,78 +129,6 @@
                   class="hover:text-white transition-colors"
                 >
                   Дорожная карта
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/faq"
-                  class="hover:text-white transition-colors"
-                >
-                  FAQ
-                </NuxtLink>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="font-semibold text-primary-100 mb-4">
-              Документы
-            </h3>
-            <ul class="space-y-2 text-gray-300">
-              <li>
-                <NuxtLink
-                  to="/privacy"
-                  class="hover:text-white transition-colors"
-                >
-                  Политика конфиденциальности
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/terms"
-                  class="hover:text-white transition-colors"
-                >
-                  Пользовательское соглашение
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/offer"
-                  class="hover:text-white transition-colors"
-                >
-                  Договор оферты
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/tariffs"
-                  class="hover:text-white transition-colors"
-                >
-                  Тарифы и расчеты
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/sla"
-                  class="hover:text-white transition-colors"
-                >
-                  Соглашение об уровне обслуживания
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/dpa"
-                  class="hover:text-white transition-colors"
-                >
-                  Обработка персональных данных
-                </NuxtLink>
-              </li>
-              <li>
-                <NuxtLink
-                  to="/lootcase-rules"
-                  class="hover:text-white transition-colors"
-                >
-                  Правила использования луткейсов
                 </NuxtLink>
               </li>
             </ul>
