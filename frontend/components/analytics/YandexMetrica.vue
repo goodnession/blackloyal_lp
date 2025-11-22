@@ -63,11 +63,9 @@ onMounted(() => {
   }
 })
 
-// Initialize Yandex Metrica
 const initMetrica = () => {
   if (import.meta.client && !window.ym) {
     /* eslint-disable */
-    // Load Yandex Metrica script (official code from Yandex)
     (function (m, e, t, r, i, k, a) {
       m[i] = m[i] || function () {
         (m[i].a = m[i].a || []).push(arguments)
@@ -86,15 +84,22 @@ const initMetrica = () => {
     })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym')
     /* eslint-enable */
 
-    // Initialize counter immediately (ym function queues calls)
     window.ym(metricaId, 'init', {
-      ssr: true,
-      webvisor: true,
+      defer: true,
       clickmap: true,
-      ecommerce: 'dataLayer',
-      accurateTrackBounce: true,
       trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true,
+      ecommerce: 'dataLayer',
     })
+
+    setTimeout(() => {
+      if (window.ym) {
+        window.ym(metricaId, 'hit', window.location.href, {
+          title: document.title,
+        })
+      }
+    }, 100)
   }
 }
 
@@ -123,12 +128,21 @@ const declineCookies = () => {
   }
 }
 
-// Track page views
-watch(() => useRoute().path, () => {
+const route = useRoute()
+const previousUrl = ref('')
+
+watch(() => route.path, () => {
   if (import.meta.client && consentGiven.value && window.ym) {
-    window.ym(metricaId, 'hit', window.location.href)
+    const currentUrl = window.location.href
+
+    window.ym(metricaId, 'hit', currentUrl, {
+      title: document.title,
+      referer: previousUrl.value || document.referrer,
+    })
+
+    previousUrl.value = currentUrl
   }
-})
+}, { immediate: false })
 
 // Add noscript fallback using useHead
 useHead({

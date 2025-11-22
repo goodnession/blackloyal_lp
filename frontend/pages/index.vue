@@ -20,9 +20,9 @@ import CtaSection from '~/components/sections/CtaSection.vue'
 useHead({
   title: 'BlackLoyal - Геймифицированная система лояльности для компьютерных клубов',
   meta: [
-    { name: 'description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET. Первый месяц бесплатно.' },
+    { name: 'description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET. Возврат средств в течение 30 дней.' },
     { property: 'og:title', content: 'BlackLoyal - Геймифицированная система лояльности для компьютерных клубов' },
-    { property: 'og:description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET. Первый месяц бесплатно.' },
+    { property: 'og:description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET. Возврат средств в течение 30 дней.' },
     { property: 'og:image', content: '/og-image.png' },
     { name: 'twitter:card', content: 'summary_large_image' },
   ],
