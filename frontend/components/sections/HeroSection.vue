@@ -96,7 +96,7 @@
             video-webm-src="/videos/vsl.webm"
             poster="/videos/vsl-poster.png"
           />
-          
+
           <div class="absolute -top-4 -left-4 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle z-10">
             +35% возвратов
           </div>

@@ -30,19 +30,19 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const props = defineProps({
+defineProps({
   videoSrc: {
     type: String,
-    default: '/videos/vsl.mp4'
+    default: '/videos/vsl.mp4',
   },
   videoWebmSrc: {
     type: String,
-    default: '/videos/vsl.webm'
+    default: '/videos/vsl.webm',
   },
   poster: {
     type: String,
-    default: '/videos/vsl-poster.png'
-  }
+    default: '/videos/vsl-poster.png',
+  },
 })
 
 const videoRef = ref(null)
@@ -102,4 +102,3 @@ onMounted(() => {
   }
 }
 </style>
-
