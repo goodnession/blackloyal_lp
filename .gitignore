@@ -29,3 +29,12 @@ tmp/
 temp/
 *.tmp
 *.bak
+
+# Video files (too large for git, should be hosted on CDN)
+frontend/public/videos/*.mp4
+frontend/public/videos/*.webm
+frontend/public/videos/*.mov
+frontend/public/videos/*.avi
+frontend/public/videos/*.png
+frontend/public/videos/*.jpg
+frontend/public/videos/*.jpeg

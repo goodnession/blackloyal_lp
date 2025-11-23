@@ -91,53 +91,17 @@
         </div>
 
         <div class="relative">
-          <div class="relative bg-white rounded-2xl shadow-hard p-8 border border-gray-200">
-            <div class="bg-gray-900 rounded-xl p-4 mx-auto max-w-xs">
-              <div class="bg-gray-800 rounded-lg p-4 text-center">
-                <div class="w-16 h-16 bg-gradient-accent rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <svg
-                    class="w-8 h-8 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <h3 class="text-white font-semibold mb-2">
-                  Кейс открыт!
-                </h3>
-                <p class="text-gray-300 text-sm mb-4">
-                  Вы получили:
-                </p>
-                <div class="bg-primary-600 text-white px-3 py-2 rounded-lg text-sm font-medium">
-                  +2 часа игры
-                </div>
-              </div>
-            </div>
-
-            <div class="absolute -bottom-4 -right-4 bg-white rounded-lg shadow-medium p-4 border border-gray-200 max-w-xs">
-              <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm font-medium text-gray-700">Создать кейс</span>
-                  <div class="w-3 h-3 bg-green-500 rounded-full" />
-                </div>
-                <div class="space-y-2">
-                  <div class="h-2 bg-gray-200 rounded" />
-                  <div class="h-2 bg-gray-200 rounded w-3/4" />
-                  <div class="h-2 bg-gray-200 rounded w-1/2" />
-                </div>
-                <button class="w-full bg-primary-600 text-white text-sm py-2 px-4 rounded-lg">
-                  Настроить призы
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="absolute -top-4 -left-4 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle">
+          <VideoPlayer
+            video-src="/videos/vsl.mp4"
+            video-webm-src="/videos/vsl.webm"
+            poster="/videos/vsl-poster.png"
+          />
+          
+          <div class="absolute -top-4 -left-4 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle z-10">
             +35% возвратов
           </div>
           <div
-            class="absolute -bottom-4 -left-4 bg-secondary-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle"
+            class="absolute -bottom-4 -left-4 bg-secondary-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle z-10"
             style="animation-delay: 1s;"
           >
             +40% выручки
@@ -147,6 +111,10 @@
     </div>
   </section>
 </template>
+
+<script setup>
+import VideoPlayer from '~/components/ui/VideoPlayer.vue'
+</script>
 
 <style scoped>
 .bg-grid-pattern {
