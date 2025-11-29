@@ -44,8 +44,18 @@
               Только для первых клиентов. Далее цена вырастет на 50% до 15 000 р/мес.
             </p>
             <div class="inline-flex items-center gap-2 bg-lime-400/10 text-lime-400 text-xs font-medium px-3 py-1.5 rounded-full mb-8">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg
+                class="w-3.5 h-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
               Настройка под ключ за 20 000 р
             </div>

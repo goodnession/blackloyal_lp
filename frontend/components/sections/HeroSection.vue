@@ -113,7 +113,9 @@
 
     <div class="border-t border-gray-200 bg-white">
       <div class="container-custom py-12">
-        <p class="text-center text-sm text-gray-400 mb-8">Интегрируется с популярными системами</p>
+        <p class="text-center text-sm text-gray-400 mb-8">
+          Интегрируется с популярными системами
+        </p>
         <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
           <span class="text-xl font-bold text-gray-300 hover:text-gray-400 transition-colors">Langame</span>
           <span class="text-xl font-bold text-gray-300 hover:text-gray-400 transition-colors">Smartshell</span>

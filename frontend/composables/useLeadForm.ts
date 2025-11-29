@@ -118,4 +118,3 @@ export function useLeadForm(options: LeadFormOptions = {}) {
     submitForm,
   }
 }
-
