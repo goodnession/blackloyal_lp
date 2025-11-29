@@ -64,10 +64,9 @@ onMounted(() => {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #171717;
   border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .video-element {
@@ -82,7 +81,7 @@ onMounted(() => {
 
 .video-element:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.5);
+  box-shadow: 0 0 0 3px rgba(161, 230, 0, 0.5);
 }
 
 .fallback-text {

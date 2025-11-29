@@ -51,88 +51,14 @@
 
       <!-- Timeline -->
       <div class="space-y-8">
-        <!-- Q1 2025 -->
+        <!-- Q1 2026 -->
         <div class="border-l-4 border-primary-500 pl-8">
           <div class="flex items-center mb-4">
             <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center mr-4">
               <span class="text-white font-bold text-sm">Q1</span>
             </div>
             <h2 class="text-2xl font-bold text-gray-900">
-              Первый квартал 2025
-            </h2>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="card p-6">
-              <div class="flex items-center mb-3">
-                <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center mr-3">
-                  <svg
-                    class="w-4 h-4 text-orange-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <h3 class="font-semibold text-gray-900">
-                  Балльная система лояльности
-                </h3>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">
-                Полноценная система начисления и списания баллов, статусы пользователей, кастомные награды.
-              </p>
-              <div class="flex items-center text-sm text-orange-600">
-                <span class="w-2 h-2 bg-orange-500 rounded-full mr-2" />
-                В разработке
-              </div>
-            </div>
-
-            <div class="card p-6">
-              <div class="flex items-center mb-3">
-                <div class="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center mr-3">
-                  <svg
-                    class="w-4 h-4 text-orange-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-                    />
-                  </svg>
-                </div>
-                <h3 class="font-semibold text-gray-900">
-                  Турниры
-                </h3>
-              </div>
-              <p class="text-gray-600 text-sm mb-3">
-                Автоматическое формирование турнирных сеток, регистрация участников, распределение призов.
-              </p>
-              <div class="flex items-center text-sm text-orange-600">
-                <span class="w-2 h-2 bg-orange-500 rounded-full mr-2" />
-                В разработке
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Q2 2025 -->
-        <div class="border-l-4 border-secondary-500 pl-8">
-          <div class="flex items-center mb-4">
-            <div class="w-8 h-8 bg-secondary-500 rounded-full flex items-center justify-center mr-4">
-              <span class="text-white font-bold text-sm">Q2</span>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-900">
-              Второй квартал 2025
+              Первый квартал 2026
             </h2>
           </div>
 
@@ -198,45 +124,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Future -->
-        <div class="border-l-4 border-gray-300 pl-8">
-          <div class="flex items-center mb-4">
-            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-4">
-              <span class="text-gray-600 font-bold text-sm">?</span>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-900">
-              Будущие планы
-            </h2>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="card p-4 opacity-50">
-              <h3 class="font-semibold text-gray-600 mb-2">
-                Мобильное приложение
-              </h3>
-              <p class="text-sm text-gray-500">
-                Нативные приложения для iOS и Android
-              </p>
-            </div>
-            <div class="card p-4 opacity-50">
-              <h3 class="font-semibold text-gray-600 mb-2">
-                AI-рекомендации
-              </h3>
-              <p class="text-sm text-gray-500">
-                Умные предложения призов и акций
-              </p>
-            </div>
-            <div class="card p-4 opacity-50">
-              <h3 class="font-semibold text-gray-600 mb-2">
-                Мультиклубность
-              </h3>
-              <p class="text-sm text-gray-500">
-                Единая система для сетей клубов
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Feedback -->
@@ -247,20 +134,12 @@
         <p class="text-primary-700 mb-6">
           Мы открыты к предложениям и готовы корректировать приоритеты на основе обратной связи от пользователей.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <NuxtLink
-            to="/#contact"
-            class="btn-primary"
-          >
-            Предложить функцию
-          </NuxtLink>
-          <a
-            href="mailto:feedback@blackloyal.ru"
-            class="btn-secondary"
-          >
-            Написать нам
-          </a>
-        </div>
+        <NuxtLink
+          to="/#contact"
+          class="btn-primary inline-block"
+        >
+          Предложить функцию
+        </NuxtLink>
       </div>
     </div>
   </div>

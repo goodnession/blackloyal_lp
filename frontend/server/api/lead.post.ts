@@ -8,10 +8,37 @@ const LeadSchema = z.object({
   type: z.enum(['pilot', 'demo']).default('pilot'),
 })
 
+const rateLimitStore = new Map<string, { count: number, resetTime: number }>()
+const RATE_LIMIT_WINDOW_MS = 60 * 1000
+const RATE_LIMIT_MAX_REQUESTS = 10
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now()
+  const record = rateLimitStore.get(ip)
+
+  if (!record || now > record.resetTime) {
+    rateLimitStore.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS })
+    return true
+  }
+
+  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return false
+  }
+
+  record.count++
+  return true
+}
+
 export default defineEventHandler(async (event) => {
   try {
-    // Rate limiting (simple implementation)
-    const clientIP = event.node.req.headers['x-forwarded-for'] || event.node.req.socket.remoteAddress || 'unknown'
+    const clientIP = String(event.node.req.headers['x-forwarded-for'] || event.node.req.socket.remoteAddress || 'unknown')
+
+    if (!checkRateLimit(clientIP)) {
+      return {
+        success: false,
+        error: 'Too many requests. Please try again later.',
+      }
+    }
 
     // Parse request body
     const body = await readBody(event)

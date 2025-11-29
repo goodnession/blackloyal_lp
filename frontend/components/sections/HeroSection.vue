@@ -1,24 +1,15 @@
 <template>
-  <section class="relative overflow-hidden bg-gradient-to-br from-gray-50 to-white">
-    <div class="absolute inset-0 bg-grid-pattern opacity-5" />
-    <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-primary rounded-full -translate-y-48 translate-x-48 opacity-10" />
-    <div class="absolute bottom-0 left-0 w-64 h-64 bg-gradient-secondary rounded-full translate-y-32 -translate-x-32 opacity-10" />
-
-    <div class="container-custom section-padding relative">
+  <section class="bg-white">
+    <div class="container-custom section-padding">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div class="space-y-8">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-primary-50 text-primary-700 text-sm font-medium">
-            <span class="w-2 h-2 bg-primary-500 rounded-full mr-2 animate-pulse-gentle" />
-            Ранний доступ доступен
-          </div>
-          <div class="space-y-4">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
-              <span class="text-gradient">Геймифицированная</span><br>
-              система лояльности для компьютерных клубов
+          <div>
+            <span class="tag mb-6 inline-block">Ранний доступ</span>
+            <h1 class="text-gray-900 mb-6">
+              Геймифицированная система лояльности для компьютерных клубов
             </h1>
-            <p class="text-xl text-gray-600 leading-relaxed max-w-lg">
-              Отдельный модуль лояльности для компьютерных клубов. Не заменяет Langame/Smartshell/SENET - интегрируется с ними.<br>
-              <strong>Сегодня доступно:</strong> кейсы с призами и Telegram-бот для авторизации.
+            <p class="text-lg text-gray-500 leading-relaxed max-w-lg">
+              Отдельный модуль лояльности для компьютерных клубов. Не заменяет Langame/Smartshell/SENET - интегрируется с ними.
             </p>
           </div>
 
@@ -29,7 +20,7 @@
             >
               <span>Запустить пилот</span>
               <svg
-                class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"
+                class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -38,74 +29,95 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
                 />
               </svg>
             </NuxtLink>
           </div>
 
-          <div class="flex flex-col sm:flex-row gap-6 text-sm text-gray-500">
-            <div class="flex items-center">
-              <svg
-                class="w-5 h-5 text-primary-500 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              Цена раннего доступа: 10 000 ₽/мес
+          <div class="flex flex-wrap gap-6 pt-4">
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <div class="w-5 h-5 rounded-full bg-lime-400 flex items-center justify-center">
+                <svg
+                  class="w-3 h-3 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              10 000 р/мес
             </div>
-            <div class="flex items-center">
-              <svg
-                class="w-5 h-5 text-primary-500 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <div class="w-5 h-5 rounded-full bg-lime-400 flex items-center justify-center">
+                <svg
+                  class="w-3 h-3 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
               Поддержка 7 дней в неделю
             </div>
-            <div class="flex items-center">
-              <svg
-                class="w-5 h-5 text-primary-500 mr-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+            <div class="flex items-center gap-2 text-sm text-gray-600">
+              <div class="w-5 h-5 rounded-full bg-lime-400 flex items-center justify-center">
+                <svg
+                  class="w-3 h-3 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
               Интеграция за 3 дня
             </div>
           </div>
         </div>
 
         <div class="relative">
-          <VideoPlayer
-            video-src="/videos/vsl.mp4"
-            video-webm-src="/videos/vsl.webm"
-            poster="/videos/vsl-poster.png"
-          />
+          <div class="bg-gray-100 rounded-3xl p-8 relative overflow-hidden">
+            <VideoPlayer
+              video-src="/videos/vsl.mp4"
+              poster="/videos/vsl-poster.png"
+            />
 
-          <div class="absolute -top-4 -left-4 bg-accent-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle z-10">
-            +35% возвратов
+            <div class="absolute -top-2 -left-2 bg-lime-400 text-gray-900 px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+              +70% количества сессий
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+              +26% к средней продолжительности сессии
+            </div>
           </div>
-          <div
-            class="absolute -bottom-4 -left-4 bg-secondary-500 text-white px-3 py-1 rounded-full text-sm font-medium animate-bounce-gentle z-10"
-            style="animation-delay: 1s;"
-          >
-            +40% выручки
-          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-200 bg-white">
+      <div class="container-custom py-12">
+        <p class="text-center text-sm text-gray-400 mb-8">Интегрируется с популярными системами</p>
+        <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+          <span class="text-xl font-bold text-gray-300 hover:text-gray-400 transition-colors">Langame</span>
+          <span class="text-xl font-bold text-gray-300 hover:text-gray-400 transition-colors">Smartshell</span>
+          <span class="text-xl font-bold text-gray-300 hover:text-gray-400 transition-colors">SENET</span>
         </div>
       </div>
     </div>
@@ -115,12 +127,3 @@
 <script setup>
 import VideoPlayer from '~/components/ui/VideoPlayer.vue'
 </script>
-
-<style scoped>
-.bg-grid-pattern {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-</style>

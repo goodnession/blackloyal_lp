@@ -3,7 +3,6 @@
     <HeroSection />
     <ProblemSection />
     <BenefitsSection />
-    <!-- <TestimonialsSection /> -->
     <HowItWorksSection />
     <CtaSection />
   </div>
@@ -13,19 +12,12 @@
 import HeroSection from '~/components/sections/HeroSection.vue'
 import ProblemSection from '~/components/sections/ProblemSection.vue'
 import BenefitsSection from '~/components/sections/BenefitsSection.vue'
-// import TestimonialsSection from '~/components/sections/TestimonialsSection.vue'
 import HowItWorksSection from '~/components/sections/HowItWorksSection.vue'
 import CtaSection from '~/components/sections/CtaSection.vue'
 
-useHead({
+useSeoMeta({
   title: 'BlackLoyal - Геймифицированная система лояльности для компьютерных клубов',
-  meta: [
-    { name: 'description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET. Возврат средств в течение 30 дней.' },
-    { property: 'og:title', content: 'BlackLoyal - Геймифицированная система лояльности для компьютерных клубов' },
-    { property: 'og:description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET. Возврат средств в течение 30 дней.' },
-    { property: 'og:image', content: '/og-image.png' },
-    { name: 'twitter:card', content: 'summary_large_image' },
-  ],
+  description: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET.',
 })
 
 useHead({

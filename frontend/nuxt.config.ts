@@ -13,7 +13,19 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxt/image',
     'nuxt-toast',
+    '@nuxtjs/seo',
   ],
+
+  site: {
+    url: 'https://blackloyal.ru',
+    name: 'BlackLoyal',
+    description: 'Геймифицированная система лояльности для компьютерных клубов. Увеличьте возврат клиентов на 35% и выручку на 40% в месяц.',
+    defaultLocale: 'ru',
+  },
+
+  ogImage: {
+    enabled: false,
+  },
 
   // Image оптимизация
   image: {
@@ -71,14 +83,6 @@ export default defineNuxtConfig({
       viewport: 'width=device-width, initial-scale=1',
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      ],
-      meta: [
-        { name: 'description', content: 'Геймифицированная система лояльности для компьютерных клубов. Увеличьте возврат клиентов на 35% и выручку на 40% в месяц.' },
-        { property: 'og:title', content: 'BlackLoyal - Геймифицированная система лояльности' },
-        { property: 'og:description', content: 'Увеличьте возврат клиентов на 35% и выручку на 40% в месяц. Кейсы с призами, Telegram-бот, интеграция с Langame/Smartshell/SENET.' },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:url', content: 'https://blackloyal.ru' },
-        { name: 'twitter:card', content: 'summary_large_image' },
       ],
     },
   },
